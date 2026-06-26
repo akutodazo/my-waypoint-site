@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>圃場共有デモ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #f5f7f4;
+      color: #1f2d24;
+    }
+    header {
+      background: #2d6a4f;
+      color: white;
+      padding: 20px;
+    }
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+    .label {
+      display: inline-block;
+      background: #d8f3dc;
+      color: #1b4332;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 14px;
+      margin-right: 6px;
+    }
+    .button {
+      display: inline-block;
+      background: #06c755;
+      color: white;
+      padding: 12px 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>圃場共有デモ</h1>
+    <p>空撮画像を、農家が判断に使える形で共有する</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>更別A圃場</h2>
+      <p>
+        <span class="label">撮影日：2026年7月15日</span>
+        <span class="label">作物：小麦</span>
+      </p>
+      <p>圃場全体画像です。中心部の状態を確認し、見回り前に注視すべき場所を把握できます。</p>
+      <img src="field-sample.jpg" alt="圃場全体画像">
+    </div>
+
+    <div class="card">
+      <h2>確認メモ</h2>
+      <ul>
+        <li>圃場中心部をスマホから確認</li>
+        <li>気になる場所を事前に把握</li>
+        <li>LINEで農家同士に共有</li>
+      </ul>
+      <a class="button" href="https://line.me/R/msg/text/?圃場画像を共有します%0Ahttps://あなたのURL" target="_blank">
+        LINEで共有
+      </a>
+    </div>
+  </main>
+</body>
+</html>
