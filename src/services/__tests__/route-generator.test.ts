@@ -65,4 +65,4 @@ describe('generateRoute', () => {
       expect(w.lat).toBeLessThan(41.840898 + margin);
     }
   });
-});S
+});
