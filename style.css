@@ -1,0 +1,10 @@
+body { margin: 0; font-family: sans-serif; }
+#container {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 12px; align-items: center;
+}
+#container label { font-size: 14px; }
+#container input { width: 70px; padding: 6px; font-size: 16px; }
+#container button {
+  padding: 10px 16px; font-size: 16px; cursor: pointer;
+}
