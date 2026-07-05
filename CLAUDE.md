@@ -95,8 +95,8 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 1-2 | Next.js 15 + TS + Tailwindスキャフォールド（.gitignoreフォルダ問題・legacy競合問題を解決） | ✅ |
 | 1-3 | Leaflet/Turf/JSZip導入 + Jest設定（jest.config.mjs） | ✅ |
 | 1-4 | **TDD第1弾**: 型定義（domain.ts）+ route-generator移植。7テストGREEN | ✅ |
-| 1-5 | **TDD第2弾**: kmz-builder移植 + template.kmz 404問題の解決 | 🔄 |
-| 1-6 | field-repository（interface + localStorage実装） | ⬜ |
+| 1-5 | **TDD第2弾**: kmz-builder移植（DI設計・Uint8Array返却）+ template.kmz 404問題の解決。12テストGREEN | ✅ |
+| 1-6 | field-repository（interface + localStorage実装） | 🔄 |
 | 1-7 | react-leafletでUI再構築・結合 | ⬜ |
 
 ### 今後の予定

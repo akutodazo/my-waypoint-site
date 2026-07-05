@@ -25,3 +25,11 @@ export interface Waypoint {
 
 /** 圃場ポリゴン: [経度, 緯度] の配列（閉じない） */
 export type PolygonCoords = [number, number][];
+
+/** 保存される圃場 */
+export interface Field {
+  id: string;            // 一意なID（UUID）
+  name: string;          // 圃場名（例: 「No.46 キャベツ北」）
+  polygon: PolygonCoords; // 圃場の境界
+  createdAt: string;     // 作成日時（ISO 8601形式）
+}
