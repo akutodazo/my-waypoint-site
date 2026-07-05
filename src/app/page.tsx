@@ -1,65 +1,76 @@
-import Image from "next/image";
+'use client';
+
+import dynamic from 'next/dynamic';
+import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
+
+// LeafletはブラウザでしかI動かないため、サーバー描画を無効化して読み込む
+const FieldMap = dynamic(
+  () => import('@/components/map/field-map').then(m => m.FieldMap),
+  { ssr: false, loading: () => <p className="p-4">地図を読み込み中…</p> },
+);
 
 export default function Home() {
+  const planner = useWaypointPlanner();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main>
+      <FieldMap
+        waypoints={planner.waypoints}
+        onPolygonDrawn={planner.setPolygon}
+      />
+
+      <div className="flex flex-wrap items-end gap-3 p-4">
+        <label className="text-sm">
+          高度(m)
+          <input
+            type="number"
+            className="mt-1 block w-24 rounded border px-2 py-1"
+            value={planner.params.height}
+            onChange={e => planner.updateParam('height', Number(e.target.value))}
+          />
+        </label>
+        <label className="text-sm">
+          速度(m/s)
+          <input
+            type="number"
+            className="mt-1 block w-24 rounded border px-2 py-1"
+            value={planner.params.speed}
+            onChange={e => planner.updateParam('speed', Number(e.target.value))}
+          />
+        </label>
+        <label className="text-sm">
+          進行方向の重なり(%)
+          <input
+            type="number"
+            className="mt-1 block w-24 rounded border px-2 py-1"
+            value={planner.params.front * 100}
+            onChange={e => planner.updateParam('front', Number(e.target.value) / 100)}
+          />
+        </label>
+        <label className="text-sm">
+          横方向の重なり(%)
+          <input
+            type="number"
+            className="mt-1 block w-24 rounded border px-2 py-1"
+            value={planner.params.side * 100}
+            onChange={e => planner.updateParam('side', Number(e.target.value) / 100)}
+          />
+        </label>
+        <button
+          onClick={planner.generate}
+          className="rounded bg-green-700 px-4 py-2 text-white"
+        >
+          ルート生成
+        </button>
+        <button
+          onClick={planner.download}
+          className="rounded bg-blue-700 px-4 py-2 text-white"
+        >
+          KMZダウンロード
+        </button>
+      </div>
+
+      {planner.error && <p className="px-4 text-red-600">{planner.error}</p>}
+    </main>
   );
 }
