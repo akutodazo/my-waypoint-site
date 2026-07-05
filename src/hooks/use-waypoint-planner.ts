@@ -38,7 +38,7 @@ export function useWaypointPlanner() {
     }
     try {
       setError(null);
-      const res = await fetch('/template.kmz');
+      const res = await fetch('template.kmz');
       if (!res.ok) throw new Error('ひな型KMZの取得に失敗しました');
       const template = await res.arrayBuffer();
       const bytes = await buildKmz(template, waypoints);
