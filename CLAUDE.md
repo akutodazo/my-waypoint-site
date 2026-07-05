@@ -86,7 +86,7 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 6 | .gitignore作成（※誤ってフォルダとして作成→Phase 1で修正） |
 | 7 | push・GitHub Pagesで動作確認 |
 
-### Phase 1: Next.js + TypeScript移植 🔄 進行中（ブランチ: feature/next-migration）
+### Phase 1: Next.js + TypeScript移植 ✅ 完了（2026-07-05、ブランチ: feature/next-migration）
 
 | Step | 内容 | 状態 |
 |---|---|---|
@@ -96,8 +96,8 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 1-3 | Leaflet/Turf/JSZip導入 + Jest設定（jest.config.mjs） | ✅ |
 | 1-4 | **TDD第1弾**: 型定義（domain.ts）+ route-generator移植。7テストGREEN | ✅ |
 | 1-5 | **TDD第2弾**: kmz-builder移植（DI設計・Uint8Array返却）+ template.kmz 404問題の解決。12テストGREEN | ✅ |
-| 1-6 | field-repository（interface + localStorage実装） | 🔄 |
-| 1-7 | react-leafletでUI再構築・結合 | ⬜ |
+| 1-6 | field-repository（interface + localStorage実装、非同期契約）。19テストGREEN | ✅ |
+| 1-7 | react-leafletでUI再構築（save-file / use-waypoint-planner / draw-control / field-map / page）。手動確認7項目OK | ✅ |
 
 ### 今後の予定
 
@@ -112,3 +112,6 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 - Windowsでは`npm`（npm.ps1）がPowerShell実行ポリシーの影響を受ける → `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`で解決
 - PATHの変更は開き直したターミナルにしか反映されない
 - 旧サイトのKMZダウンロードは`template.kmz`不在で404だった（Step 1-5で根本解決）
+- 実際に入ったNext.jsは**16.2.10**（想定は15）。AGENTS.mdの警告どおり`node_modules/next/dist/docs/`の確認が必須（例: `ssr: false`はClient Component内のみ可）
+- leaflet-draw 1.0.4のrectangleは`showArea: false`必須（既知バグ回避）
+- ESLintの警告はまずファイル名を確認する（今回の7警告は全て`legacy/`由来→除外設定で解決、新コードは無警告だった）
