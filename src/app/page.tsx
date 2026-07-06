@@ -128,7 +128,8 @@ export default function Home() {
               <li key={f.id} className="flex items-center gap-2 text-sm">
                 <button
                   onClick={() => planner.loadField(f)}
-                  className="rounded border border-blue-700 px-3 py-2 text-blue-700 hover:bg-blue-50"                >
+                  className="rounded border border-blue-700 px-3 py-2 text-blue-700 hover:bg-blue-50"               
+                  >
                   読み込む
                 </button>
                 <span>{f.name}</span>
@@ -142,7 +143,8 @@ export default function Home() {
                     }
                   }}
                   className="ml-auto rounded border border-red-300 px-3 py-2 text-red-600 hover:bg-red-50"
-                >                  削除
+                >                 
+                 削除
                 </button>
               </li>
             ))}
