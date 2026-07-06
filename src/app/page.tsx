@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
 import { FLIGHT_PRESETS } from '@/services/presets';
+import { useState } from 'react';
 
 // LeafletはブラウザでしかI動かないため、サーバー描画を無効化して読み込む
 const FieldMap = dynamic(
@@ -12,10 +13,12 @@ const FieldMap = dynamic(
 
 export default function Home() {
   const planner = useWaypointPlanner();
+    const [fieldName, setFieldName] = useState('');
 
   return (
     <main>
       <FieldMap
+        polygon={planner.polygon}
         waypoints={planner.waypoints}
         onPolygonDrawn={planner.setPolygon}
       />
@@ -94,6 +97,59 @@ export default function Home() {
       </div>
 
       {planner.error && <p className="px-4 text-red-600">{planner.error}</p>}
+            <div className="border-t p-4">
+        <h2 className="mb-2 text-sm font-bold">保存した圃場</h2>
+        <div className="mb-3 flex flex-wrap gap-2">
+          <input
+            type="text"
+            placeholder="圃場名（例: No.46 キャベツ北）"
+            className="rounded border px-2 py-1 text-sm"
+            value={fieldName}
+            onChange={e => setFieldName(e.target.value)}
+          />
+          <button
+            onClick={async () => {
+              await planner.saveField(fieldName);
+              setFieldName('');
+            }}
+            className="rounded bg-green-700 px-3 py-1 text-sm text-white"
+          >
+            今の圃場を保存
+          </button>
+        </div>
+        {planner.fields.length === 0 ? (
+          <p className="text-sm text-gray-500">
+            保存済みの圃場はまだありません
+          </p>
+        ) : (
+          <ul className="space-y-1">
+            {planner.fields.map(f => (
+              <li key={f.id} className="flex items-center gap-2 text-sm">
+                <button
+                  onClick={() => planner.loadField(f)}
+                  className="rounded border border-blue-700 px-2 py-1 text-blue-700 hover:bg-blue-50"
+                >
+                  読み込む
+                </button>
+                <span>{f.name}</span>
+                <span className="text-gray-400">
+                  {new Date(f.createdAt).toLocaleDateString('ja-JP')}
+                </span>
+                <button
+                  onClick={() => {
+                    if (confirm(`「${f.name}」を削除しますか？`)) {
+                      planner.removeField(f.id);
+                    }
+                  }}
+                  className="ml-auto rounded border border-red-300 px-2 py-1 text-red-600 hover:bg-red-50"
+                >
+                  削除
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }
