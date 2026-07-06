@@ -99,10 +99,32 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 1-6 | field-repository（interface + localStorage実装、非同期契約）。19テストGREEN | ✅ |
 | 1-7 | react-leafletでUI再構築（save-file / use-waypoint-planner / draw-control / field-map / page）。手動確認7項目OK | ✅ |
 
+### Phase 2: 品質レール＋公開 ✅ 完了（2026-07-06）
+
+| Step | 内容 | 状態 |
+|---|---|---|
+| 2-1 | CIワークフロー（PR/push時にlint→test→build） | ✅ |
+| 2-2 | PRテンプレート | ✅ |
+| 2-3 | 静的書き出し設定（output: export、basePath、fetch相対化、Blob型エラー修正） | ✅ |
+| 2-4 | デプロイワークフロー + Pages SourceをGitHub Actionsに変更 | ✅ |
+| 2-5 | **PR #1作成→CI緑→mainマージ→自動デプロイ成功** | ✅ |
+
+公開URL: https://akutodazo.github.io/my-waypoint-site/ （mainへのマージで自動デプロイ）
+
+### Phase 3: プロダクト機能 🔄 進行中（7〜9月、空撮20回と並行ドッグフーディング）
+
+| Step | 内容 | 状態 |
+|---|---|---|
+| 3-1 | 撮影プリセット（検証済みパラメータ3種をワンタップ選択） | ⬜ |
+| 3-2 | ジンバル角のKMZ書き込み（kmz-builder拡張、TDD） | ⬜ |
+| 3-3 | 圃場の保存・呼び出しUI（field-repositoryを画面に接続） | ⬜ |
+| 3-4 | モバイルUI調整（タッチ操作・ボタンサイズ） | ⬜ |
+| 3-5 | PWA化（ホーム画面追加・オフライン対応） | ⬜ |
+| 3-6 | DJI Fly転送手順ガイドページ | ⬜ |
+| 3-7 | 実地ドッグフーディング（READMEに動作確認済みバージョン記録） | ⬜ |
+
 ### 今後の予定
 
-- Phase 2: 品質レール（CI・PRテンプレート）
-- Phase 3: 圃場保存・撮影プリセット・モバイルUI・PWA（7〜9月の空撮20回でドッグフーディング）
 - Phase 4: 共有基盤（OpenAPI + Prisma、オルソ画像の地図重畳表示）※2026年10月〜
 
 ### 学んだ教訓
