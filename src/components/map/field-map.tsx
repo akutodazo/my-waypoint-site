@@ -1,23 +1,39 @@
 'use client';
 
-import { MapContainer, TileLayer, Polyline, CircleMarker, Tooltip } from 'react-leaflet';
+import { useEffect } from 'react';
+import {
+  MapContainer, TileLayer, Polyline, Polygon, CircleMarker, Tooltip, useMap,
+} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import { DrawControl } from './draw-control';
 import type { PolygonCoords, Waypoint } from '@/types/domain';
 
 interface Props {
+  polygon: PolygonCoords | null;
   waypoints: Waypoint[] | null;
   onPolygonDrawn: (polygon: PolygonCoords) => void;
 }
 
-export function FieldMap({ waypoints, onPolygonDrawn }: Props) {
-  // 内部形式は[経度,緯度]、Leafletは[緯度,経度]。ここが変換の境界
+/** polygonが変わったら地図をその場所に移動させる */
+function FitBounds({ polygon }: { polygon: PolygonCoords | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (polygon && polygon.length >= 3) {
+      map.fitBounds(polygon.map(([lng, lat]) => [lat, lng] as [number, number]));
+    }
+  }, [map, polygon]);
+  return null;
+}
+
+export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
   const latlngs = waypoints?.map(w => [w.lat, w.lon] as [number, number]) ?? [];
+  const polygonLatlngs =
+    polygon?.map(([lng, lat]) => [lat, lng] as [number, number]) ?? [];
 
   return (
     <MapContainer
-      center={[41.84, 140.76]} // 函館付近
+      center={[41.84, 140.76]}
       zoom={16}
       style={{ height: '70vh', width: '100%' }}
     >
@@ -27,6 +43,10 @@ export function FieldMap({ waypoints, onPolygonDrawn }: Props) {
         maxZoom={19}
       />
       <DrawControl onPolygonDrawn={onPolygonDrawn} />
+      <FitBounds polygon={polygon} />
+      {polygonLatlngs.length > 0 && (
+        <Polygon positions={polygonLatlngs} pathOptions={{ color: 'green' }} />
+      )}
       {latlngs.length > 0 && (
         <Polyline positions={latlngs} pathOptions={{ color: 'blue' }} />
       )}
