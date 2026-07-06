@@ -33,11 +33,10 @@ export function DrawControl({ onPolygonDrawn }: Props) {
     map.addControl(control);
 
     const onCreated = (e: L.LeafletEvent) => {
-      drawnItems.clearLayers();
       const layer = (e as L.DrawEvents.Created).layer as L.Polygon;
-      drawnItems.addLayer(layer);
       const coords = (layer.getLatLngs()[0] as L.LatLng[])
         .map(ll => [ll.lng, ll.lat] as [number, number]);
+      drawnItems.clearLayers(); // 図形は残さない（表示は状態から描く方式に統一）
       onPolygonDrawn(coords);
     };
     map.on(L.Draw.Event.CREATED, onCreated);
