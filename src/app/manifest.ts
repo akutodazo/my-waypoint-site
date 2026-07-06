@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+export const dynamic = 'force-static';
 
 // GitHub Pagesではサイトが /my-waypoint-site/ 配下にあるため、本番だけ接頭辞をつける
 const basePath = process.env.NODE_ENV === 'production' ? '/my-waypoint-site' : '';
