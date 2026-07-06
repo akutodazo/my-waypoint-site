@@ -9,7 +9,7 @@ import type { FlightParams, PolygonCoords, Waypoint } from '@/types/domain';
 
 export function useWaypointPlanner() {
   const [params, setParams] = useState<FlightParams>({
-    height: 50, speed: 5, front: 0.8, side: 0.7,
+    height: 50, speed: 5, front: 0.8, side: 0.7, gimbalPitch: -90,
   });
   const [polygon, setPolygonState] = useState<PolygonCoords | null>(null);
   const [waypoints, setWaypoints] = useState<Waypoint[] | null>(null);
@@ -51,11 +51,15 @@ export function useWaypointPlanner() {
       const res = await fetch('template.kmz');
       if (!res.ok) throw new Error('ひな型KMZの取得に失敗しました');
       const template = await res.arrayBuffer();
-      const bytes = await buildKmz(template, waypoints);
+      const bytes = await buildKmz(template, waypoints, {
+        gimbalPitch: params.gimbalPitch,
+      });
       saveFile(bytes, 'route.kmz');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'KMZ生成に失敗しました');
     }
   };
+
+  
 
   return { params, updateParam, applyPreset, waypoints, error, setPolygon, generate, download };}

@@ -68,6 +68,17 @@ export default function Home() {
             onChange={e => planner.updateParam('side', Number(e.target.value) / 100)}
           />
         </label>
+                <label className="text-sm">
+          ジンバル角(度)
+          <input
+            type="number"
+            max={0}
+            min={-90}
+            className="mt-1 block w-24 rounded border px-2 py-1"
+            value={planner.params.gimbalPitch ?? -90}
+            onChange={e => planner.updateParam('gimbalPitch', Number(e.target.value))}
+          />
+        </label>
         <button
           onClick={planner.generate}
           className="rounded bg-green-700 px-4 py-2 text-white"

@@ -68,3 +68,39 @@ describe('buildKmz', () => {
     await expect(buildKmz(template, [])).rejects.toThrow();
   });
 });
+
+describe('buildKmz - ジンバル角の書き込み', () => {
+  test('gimbalPitch: -60 を指定すると全ての回転アクションの角度が-60になる', async () => {
+    const out = await buildKmz(template, waypoints, { gimbalPitch: -60 });
+    const { doc } = await parseWpml(out);
+    const angles = doc.getElementsByTagName('wpml:gimbalPitchRotateAngle');
+    expect(angles.length).toBeGreaterThan(0);
+    for (const el of Array.from(angles)) {
+      expect(el.textContent).toBe('-60');
+    }
+  });
+
+  test('gimbalPitch: -60 を指定すると各地点のジンバル姿勢も-60になる', async () => {
+    const out = await buildKmz(template, waypoints, { gimbalPitch: -60 });
+    const { doc } = await parseWpml(out);
+    const angles = doc.getElementsByTagName('wpml:waypointGimbalPitchAngle');
+    expect(angles.length).toBe(waypoints.length); // 1地点につき1つ
+    for (const el of Array.from(angles)) {
+      expect(el.textContent).toBe('-60');
+    }
+  });
+
+  test('gimbalPitch: -90（真下）も正しく書き込まれる', async () => {
+    const out = await buildKmz(template, waypoints, { gimbalPitch: -90 });
+    const { doc } = await parseWpml(out);
+    const first = doc.getElementsByTagName('wpml:gimbalPitchRotateAngle')[0];
+    expect(first.textContent).toBe('-90');
+  });
+
+  test('gimbalPitchを省略するとひな型の角度（0）のまま変更されない', async () => {
+    const out = await buildKmz(template, waypoints);
+    const { doc } = await parseWpml(out);
+    const first = doc.getElementsByTagName('wpml:gimbalPitchRotateAngle')[0];
+    expect(first.textContent).toBe('0');
+  });
+});
