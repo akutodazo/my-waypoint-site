@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
+import { FLIGHT_PRESETS } from '@/services/presets';
 
 // LeafletはブラウザでしかI動かないため、サーバー描画を無効化して読み込む
 const FieldMap = dynamic(
@@ -18,7 +19,18 @@ export default function Home() {
         waypoints={planner.waypoints}
         onPolygonDrawn={planner.setPolygon}
       />
-
+      <div className="flex flex-wrap gap-2 px-4 pt-4">
+        {FLIGHT_PRESETS.map(preset => (
+          <button
+            key={preset.id}
+            onClick={() => planner.applyPreset(preset)}
+            title={preset.description}
+            className="rounded border border-green-700 px-3 py-2 text-sm text-green-800 hover:bg-green-50"
+          >
+            {preset.label}
+          </button>
+        ))}
+      </div>
       <div className="flex flex-wrap items-end gap-3 p-4">
         <label className="text-sm">
           高度(m)

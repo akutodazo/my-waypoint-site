@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { generateRoute } from '@/services/route-generator';
 import { buildKmz } from '@/services/kmz-builder';
 import { saveFile } from '@/lib/save-file';
+import type { FlightPreset } from '@/types/domain';
 import type { FlightParams, PolygonCoords, Waypoint } from '@/types/domain';
 
 export function useWaypointPlanner() {
@@ -21,6 +22,15 @@ export function useWaypointPlanner() {
 
   const updateParam = (key: keyof FlightParams, value: number) =>
     setParams(prev => ({ ...prev, [key]: value }));
+
+    const applyPreset = (preset: FlightPreset) =>
+    setParams({
+      height: preset.height,
+      speed: preset.speed,
+      front: preset.front,
+      side: preset.side,
+      gimbalPitch: preset.gimbalPitch,
+    });
 
   const generate = () => {
     if (!polygon) {
@@ -48,5 +58,4 @@ export function useWaypointPlanner() {
     }
   };
 
-  return { params, updateParam, waypoints, error, setPolygon, generate, download };
-}
+  return { params, updateParam, applyPreset, waypoints, error, setPolygon, generate, download };}
