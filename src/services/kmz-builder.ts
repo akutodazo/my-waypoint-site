@@ -9,6 +9,7 @@ import type { Waypoint } from '@/types/domain';
 export async function buildKmz(
   template: ArrayBuffer | Uint8Array,
   waypoints: Waypoint[],
+  options: { gimbalPitch?: number } = {},
 ): Promise<Uint8Array> {
   if (waypoints.length === 0) {
     throw new Error('ウェイポイントが空です。先にルートを生成してください');
@@ -43,6 +44,11 @@ export async function buildKmz(
     setWpml(pm, 'index', String(w.index));
     setWpml(pm, 'executeHeight', String(w.height));
     setWpml(pm, 'waypointSpeed', String(w.speed));
+        if (options.gimbalPitch !== undefined) {
+      // カメラを向ける・回す・姿勢記録の3種類すべてを指定角度に統一する
+      setWpmlAll(pm, 'gimbalPitchRotateAngle', String(options.gimbalPitch));
+      setWpmlAll(pm, 'waypointGimbalPitchAngle', String(options.gimbalPitch));
+    }
     folder.appendChild(pm);
   }
 
@@ -62,4 +68,11 @@ function setText(parent: Element, tag: string, value: string) {
 function setWpml(parent: Element, name: string, value: string) {
   const el = parent.getElementsByTagName('wpml:' + name)[0];
   if (el) el.textContent = value;
+}
+// 補助：該当するタグ「すべて」の中身を書き換える（setWpmlは最初の1つだけ）
+function setWpmlAll(parent: Element, name: string, value: string) {
+  const els = parent.getElementsByTagName('wpml:' + name);
+  for (const el of Array.from(els)) {
+    el.textContent = value;
+  }
 }
