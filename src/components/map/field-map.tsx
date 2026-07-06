@@ -35,7 +35,7 @@ export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
     <MapContainer
       center={[41.84, 140.76]}
       zoom={16}
-      style={{ height: '70vh', width: '100%' }}
+      className="h-[60vh] w-full sm:h-[70vh]"
     >
       <TileLayer
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"

@@ -22,18 +22,7 @@ export default function Home() {
         waypoints={planner.waypoints}
         onPolygonDrawn={planner.setPolygon}
       />
-      <div className="flex flex-wrap gap-2 px-4 pt-4">
-        {FLIGHT_PRESETS.map(preset => (
-          <button
-            key={preset.id}
-            onClick={() => planner.applyPreset(preset)}
-            title={preset.description}
-            className="rounded border border-green-700 px-3 py-2 text-sm text-green-800 hover:bg-green-50"
-          >
-            {preset.label}
-          </button>
-        ))}
-      </div>
+      
             <div className="flex gap-2 overflow-x-auto px-4 pt-4 pb-1">
         {FLIGHT_PRESETS.map(preset => (
           <button
@@ -139,8 +128,7 @@ export default function Home() {
               <li key={f.id} className="flex items-center gap-2 text-sm">
                 <button
                   onClick={() => planner.loadField(f)}
-                  className="rounded border border-blue-700 px-2 py-1 text-blue-700 hover:bg-blue-50"
-                >
+                  className="rounded border border-blue-700 px-3 py-2 text-blue-700 hover:bg-blue-50"                >
                   読み込む
                 </button>
                 <span>{f.name}</span>
@@ -153,9 +141,8 @@ export default function Home() {
                       planner.removeField(f.id);
                     }
                   }}
-                  className="ml-auto rounded border border-red-300 px-2 py-1 text-red-600 hover:bg-red-50"
-                >
-                  削除
+                  className="ml-auto rounded border border-red-300 px-3 py-2 text-red-600 hover:bg-red-50"
+                >                  削除
                 </button>
               </li>
             ))}
