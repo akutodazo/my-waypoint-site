@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* タッチ端末（スマホ・タブレット）でleaflet-drawのツールバーを大きくする */
+@media (pointer: coarse) {
+  .leaflet-draw-toolbar {
+    transform: scale(1.4);
+    transform-origin: top left;
+  }
+}

@@ -34,12 +34,24 @@ export default function Home() {
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap items-end gap-3 p-4">
+            <div className="flex gap-2 overflow-x-auto px-4 pt-4 pb-1">
+        {FLIGHT_PRESETS.map(preset => (
+          <button
+            key={preset.id}
+            onClick={() => planner.applyPreset(preset)}
+            title={preset.description}
+            className="shrink-0 rounded border border-green-700 px-4 py-3 text-base text-green-800 active:bg-green-100"
+          >
+            {preset.label}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 gap-3 p-4 sm:flex sm:flex-wrap sm:items-end">
         <label className="text-sm">
           高度(m)
           <input
             type="number"
-            className="mt-1 block w-24 rounded border px-2 py-1"
+            className="mt-1 block w-full rounded border px-3 py-2 text-base sm:w-24"
             value={planner.params.height}
             onChange={e => planner.updateParam('height', Number(e.target.value))}
           />
@@ -48,7 +60,7 @@ export default function Home() {
           速度(m/s)
           <input
             type="number"
-            className="mt-1 block w-24 rounded border px-2 py-1"
+            className="mt-1 block w-full rounded border px-3 py-2 text-base sm:w-24"
             value={planner.params.speed}
             onChange={e => planner.updateParam('speed', Number(e.target.value))}
           />
@@ -57,7 +69,7 @@ export default function Home() {
           進行方向の重なり(%)
           <input
             type="number"
-            className="mt-1 block w-24 rounded border px-2 py-1"
+            className="mt-1 block w-full rounded border px-3 py-2 text-base sm:w-24"
             value={planner.params.front * 100}
             onChange={e => planner.updateParam('front', Number(e.target.value) / 100)}
           />
@@ -66,7 +78,7 @@ export default function Home() {
           横方向の重なり(%)
           <input
             type="number"
-            className="mt-1 block w-24 rounded border px-2 py-1"
+            className="mt-1 block w-full rounded border px-3 py-2 text-base sm:w-24"
             value={planner.params.side * 100}
             onChange={e => planner.updateParam('side', Number(e.target.value) / 100)}
           />
@@ -77,20 +89,20 @@ export default function Home() {
             type="number"
             max={0}
             min={-90}
-            className="mt-1 block w-24 rounded border px-2 py-1"
+            className="mt-1 block w-full rounded border px-3 py-2 text-base sm:w-24"
             value={planner.params.gimbalPitch ?? -90}
             onChange={e => planner.updateParam('gimbalPitch', Number(e.target.value))}
           />
         </label>
         <button
           onClick={planner.generate}
-          className="rounded bg-green-700 px-4 py-2 text-white"
+          className="col-span-2 rounded bg-green-700 px-4 py-3 text-base text-white sm:col-span-1 sm:w-auto"
         >
           ルート生成
         </button>
         <button
           onClick={planner.download}
-          className="rounded bg-blue-700 px-4 py-2 text-white"
+          className="col-span-2 rounded bg-blue-700 px-4 py-3 text-base text-white sm:col-span-1 sm:w-auto"
         >
           KMZダウンロード
         </button>
