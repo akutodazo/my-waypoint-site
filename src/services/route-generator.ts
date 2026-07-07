@@ -3,9 +3,13 @@ import type {
   CameraSpec, FlightParams, PolygonCoords, Waypoint,
 } from '@/types/domain';
 
+/**
+ * 35mm判換算24mm・4:3センサーの機体（DJI Air 3S広角 / Lito X1）。
+ * 換算値で統一: 幅34.6×高さ26.0（対角43.3=フルサイズ対角）・焦点24mm相当
+ */
 export const DEFAULT_CAMERA: CameraSpec = {
-  sensorWidth: 17.3,
-  sensorHeight: 13.0,
+  sensorWidth: 34.6,
+  sensorHeight: 26.0,
   focalLength: 24,
 };
 
