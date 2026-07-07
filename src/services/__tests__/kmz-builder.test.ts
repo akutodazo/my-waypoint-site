@@ -104,3 +104,42 @@ describe('buildKmz - ジンバル角の書き込み', () => {
     expect(first.textContent).toBe('0');
   });
 });
+
+describe('buildKmz - 撮影アクション', () => {
+  test('takePhoto: true で全地点に撮影アクションが入る', async () => {
+    const out = await buildKmz(template, waypoints, { takePhoto: true });
+    const { doc } = await parseWpml(out);
+    const placemarks = Array.from(doc.getElementsByTagName('Placemark'));
+    for (const pm of placemarks) {
+      const funcs = Array.from(pm.getElementsByTagName('wpml:actionActuatorFunc'))
+        .map(el => el.textContent);
+      expect(funcs).toContain('takePhoto');
+    }
+  });
+
+  test('takePhoto: true で録画開始アクションが残らない', async () => {
+    const out = await buildKmz(template, waypoints, { takePhoto: true });
+    const { wpmlText } = await parseWpml(out);
+    expect(wpmlText).not.toContain('startRecord');
+  });
+
+  test('takePhoto: true で各地点のアクション適用範囲が自分の番号になる', async () => {
+    const out = await buildKmz(template, waypoints, { takePhoto: true });
+    const { doc } = await parseWpml(out);
+    const placemarks = Array.from(doc.getElementsByTagName('Placemark'));
+    placemarks.forEach(pm => {
+      const index = pm.getElementsByTagName('wpml:index')[0].textContent;
+      const starts = Array.from(pm.getElementsByTagName('wpml:actionGroupStartIndex'));
+      const ends = Array.from(pm.getElementsByTagName('wpml:actionGroupEndIndex'));
+      for (const el of [...starts, ...ends]) {
+        expect(el.textContent).toBe(index);
+      }
+    });
+  });
+
+  test('takePhotoを省略するとひな型のまま（録画開始が残る）', async () => {
+    const out = await buildKmz(template, waypoints);
+    const { wpmlText } = await parseWpml(out);
+    expect(wpmlText).toContain('startRecord');
+  });
+});
