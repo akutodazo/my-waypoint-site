@@ -9,7 +9,7 @@ import type { Waypoint } from '@/types/domain';
 export async function buildKmz(
   template: ArrayBuffer | Uint8Array,
   waypoints: Waypoint[],
-  options: { gimbalPitch?: number } = {},
+  options: { gimbalPitch?: number; takePhoto?: boolean } = {},
 ): Promise<Uint8Array> {
   if (waypoints.length === 0) {
     throw new Error('ウェイポイントが空です。先にルートを生成してください');
@@ -44,10 +44,21 @@ export async function buildKmz(
     setWpml(pm, 'index', String(w.index));
     setWpml(pm, 'executeHeight', String(w.height));
     setWpml(pm, 'waypointSpeed', String(w.speed));
-        if (options.gimbalPitch !== undefined) {
+    if (options.gimbalPitch !== undefined) {
       // カメラを向ける・回す・姿勢記録の3種類すべてを指定角度に統一する
       setWpmlAll(pm, 'gimbalPitchRotateAngle', String(options.gimbalPitch));
       setWpmlAll(pm, 'waypointGimbalPitchAngle', String(options.gimbalPitch));
+    }
+        if (options.takePhoto) {
+      // 録画開始（ひな型の設定）を静止画撮影に置き換える
+      const funcs = pm.getElementsByTagName('wpml:actionActuatorFunc');
+      for (const el of Array.from(funcs)) {
+        if (el.textContent === 'startRecord') el.textContent = 'takePhoto';
+      }
+      // アクションの適用範囲を「この地点だけ」に直す
+      // （ひな型は0番用の設定のままなので、複製先の番号に合わせる）
+      setWpmlAll(pm, 'actionGroupStartIndex', String(w.index));
+      setWpmlAll(pm, 'actionGroupEndIndex', String(w.index));
     }
     folder.appendChild(pm);
   }

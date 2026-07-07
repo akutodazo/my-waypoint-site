@@ -7,7 +7,7 @@ import JSZip from 'jszip';
 import { buildKmz } from '../kmz-builder';
 import type { Waypoint } from '@/types/domain';
 
-// テストの正解データ＝DJI Flyが出力した本物のKMZ
+// テストの正解データ＝DJIFlyが出力した本物のKMZ
 const templatePath = path.join(
   process.cwd(), 'legacy', 'samples', 'dji-fly-original.kmz',
 );
