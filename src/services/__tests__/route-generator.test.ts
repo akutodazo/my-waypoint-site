@@ -17,16 +17,15 @@ const square100m: PolygonCoords = [
   [140.76, 41.840898],
 ];
 
-describe('computeSpacing', () => {
-  test('高度50m・側方70%重なりのとき飛行線間隔は約10.81m', () => {
-    // 撮影幅 = (17.3 / 24) × 50 = 36.04m、その30%が間隔
+  test('高度50m・側方70%重なりのとき飛行線間隔は約21.6m', () => {
+    // 撮影幅 = (34.6 / 24) × 50 = 72.1m、その30%が間隔
     const { lineSpacing } = computeSpacing(params, DEFAULT_CAMERA);
-    expect(lineSpacing).toBeCloseTo(10.81, 1);
+    expect(lineSpacing).toBeCloseTo(21.6, 1);
   });
 
-  test('高度50m・前方80%重なりのとき撮影間隔は約5.42m', () => {
+  test('高度50m・前方80%重なりのとき撮影間隔は約10.8m', () => {
     const { photoSpacing } = computeSpacing(params, DEFAULT_CAMERA);
-    expect(photoSpacing).toBeCloseTo(5.42, 1);
+    expect(photoSpacing).toBeCloseTo(10.8, 1);
   });
 
   test('高度を2倍にすると間隔も2倍になる', () => {
@@ -34,7 +33,6 @@ describe('computeSpacing', () => {
     const b = computeSpacing({ ...params, height: 100 }, DEFAULT_CAMERA);
     expect(b.lineSpacing).toBeCloseTo(a.lineSpacing * 2, 5);
   });
-});
 
 describe('generateRoute', () => {
   test('ウェイポイントが1点以上生成される', () => {
