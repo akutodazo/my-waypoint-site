@@ -67,10 +67,14 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 
 ### ドメイン知識（重要な定数・制約）
 
-- カメラ既定値: センサー17.3×13.0mm・焦点距離24mm（`DEFAULT_CAMERA`）
+- 対象機体: DJI Air 3S（広角、FOV 84°）/ DJI Lito X1（FOV 82.1°）。どちらも35mm判換算24mm・4:3
+- カメラ既定値（`DEFAULT_CAMERA`）: **換算値で統一** 幅34.6×高さ26.0mm・焦点24mm（対角43.3=フルサイズ対角）。※2026-07-07にMavic 3系の実焦点仕様（17.3×13/24）から修正。換算焦点距離と物理センサー寸法を混ぜると画角が約半分に計算される
+- **ウェイポイント上限: 200点/ミッション**（Air 3S・Lito X1とも）。超過時はUIが警告。目安: 詳細10mで約1,900㎡、圃場全体20mで約7,500㎡まで
 - 撮影プリセット（検証済みパラメータ）: 高度20m/-90°、10m/-90°、10m/-60°
 - KMZ内部構造: `wpmz/template.kml` + `wpmz/waylines.wpml`（WPML 1.0.2、Placemarkの複製で経路を書き換える）
-- DJI Fly上書きは非公式手法。動作確認済みバージョンをREADMEに記録すること
+- 撮影アクション: ひな型の`startRecord`（動画）を`takePhoto`（静止画）に置換して各点撮影。`buildKmz`のオプションで、フックは常に`takePhoto: true`を渡す
+- DJI Fly上書きは非公式手法。動作確認済みバージョンをREADMEと/guideに記録すること
+- 大圃場対応（ミッション分割、距離間隔撮影トリガー`multipleDistance`の実機検証）はPhase 4以降の課題
 
 ## 開発の歩み（進捗ログ）
 
@@ -119,9 +123,11 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 3-2 | ジンバル角のKMZ書き込み（kmz-builder拡張、TDD） | ✅ |
 | 3-3 | 圃場の保存・呼び出しUI（field-repositoryを画面に接続） | ✅ |
 | 3-4 | モバイルUI調整（タッチ操作・ボタンサイズ） | ✅ |
-| 3-5 | PWA化（ホーム画面追加・オフライン対応） | ⬜ |
-| 3-6 | DJI Fly転送手順ガイドページ | ⬜ |
-| 3-7 | 実地ドッグフーディング（READMEに動作確認済みバージョン記録） | ⬜ |
+| 3-5 | PWA化（manifest.ts・sw.js・アイコン生成）。実機でホーム画面追加・機内モード動作確認済 | ✅ |
+| 3-6 | DJI Fly転送手順ガイドページ（/guide）※動作確認済み環境の記入は3-7で | ✅ |
+| 3-8a | カメラ定数を実機（Air 3S/Lito X1、換算24mm 4:3）に修正。仕様変更としてテスト期待値も更新 | ✅ |
+| 3-8b | 各点で静止画撮影（startRecord→takePhoto置換・actionGroup番号修正）＋200点超過警告。32テストGREEN | ✅ |
+| 3-7 | 実地ドッグフーディング（ジンバル角・各点撮影・点数上限の実機確認、/guideとREADMEに環境記入） | ⬜ |
 
 ### 今後の予定
 
@@ -137,3 +143,6 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 - 実際に入ったNext.jsは**16.2.10**（想定は15）。AGENTS.mdの警告どおり`node_modules/next/dist/docs/`の確認が必須（例: `ssr: false`はClient Component内のみ可）
 - leaflet-draw 1.0.4のrectangleは`showArea: false`必須（既知バグ回避）
 - ESLintの警告はまずファイル名を確認する（今回の7警告は全て`legacy/`由来→除外設定で解決、新コードは無警告だった）
+- JSXは`>{children}`のように行末に要素が隠れていることがある。行を足す前に右端まで読む（layout.tsxのchildren二重描画の教訓）
+- カメラ仕様は「35mm判換算」と「物理センサー寸法＋実焦点距離」を混ぜない。換算なら換算で統一する
+- 「'xxx' is assigned a value but never used」警告は、フックで作った値をreturnし忘れているサインのことがある

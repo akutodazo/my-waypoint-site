@@ -99,6 +99,9 @@ export default function Home() {
       </div>
 
       {planner.error && <p className="px-4 text-red-600">{planner.error}</p>}
+            {planner.warning && (
+        <p className="px-4 text-amber-700">⚠ {planner.warning}</p>
+      )}
             <div className="border-t p-4">
         <h2 className="mb-2 text-sm font-bold">保存した圃場</h2>
               <div className="px-4 pt-1">
