@@ -6,6 +6,8 @@ import { saveFile } from '@/lib/save-file';
 import { LocalStorageFieldRepository } from '@/repositories/implementations/local-storage-field-repository';
 import type { IFieldRepository } from '@/repositories/interfaces/i-field-repository';
 import type { Field, FlightParams, FlightPreset, PolygonCoords, Waypoint } from '@/types/domain';
+// DJI Fly（Air 3S / Lito X1）のウェイポイント飛行の上限
+const WAYPOINT_LIMIT = 200;
 
 // 保存先の実体はここだけが知っている。Phase 4でDB版に差し替えるときもこの1行だけ変わる
 const fieldRepository: IFieldRepository = new LocalStorageFieldRepository();
@@ -17,6 +19,7 @@ export function useWaypointPlanner() {
   const [polygon, setPolygonState] = useState<PolygonCoords | null>(null);
   const [waypoints, setWaypoints] = useState<Waypoint[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
 
   const setPolygon = useCallback((p: PolygonCoords) => {
     setPolygonState(p);
@@ -78,7 +81,14 @@ export function useWaypointPlanner() {
       return;
     }
     setError(null);
-    setWaypoints(generateRoute(polygon, params));
+    const wps = generateRoute(polygon, params);
+    setWaypoints(wps);
+    setWarning(
+      wps.length > WAYPOINT_LIMIT
+        ? `ウェイポイントが${wps.length}点あり、DJI Flyの上限${WAYPOINT_LIMIT}点を超えています。` +
+          '高度を上げるか、圃場を分けて作成してください'
+        : null,
+    );
   };
 
   const download = async () => {
@@ -93,6 +103,7 @@ export function useWaypointPlanner() {
       const template = await res.arrayBuffer();
       const bytes = await buildKmz(template, waypoints, {
         gimbalPitch: params.gimbalPitch,
+        takePhoto: true,
       });
       saveFile(bytes, 'route.kmz');
     } catch (e) {
@@ -103,7 +114,7 @@ export function useWaypointPlanner() {
   
 
   return {
-    params, updateParam, applyPreset, polygon, waypoints, error,
+    params, updateParam, applyPreset, polygon, waypoints, error, warning,
     setPolygon, generate, download,
     fields, saveField, loadField, removeField,
   };
