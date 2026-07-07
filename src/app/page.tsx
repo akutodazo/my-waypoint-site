@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
 import { FLIGHT_PRESETS } from '@/services/presets';
 import { useState } from 'react';
@@ -100,6 +101,11 @@ export default function Home() {
       {planner.error && <p className="px-4 text-red-600">{planner.error}</p>}
             <div className="border-t p-4">
         <h2 className="mb-2 text-sm font-bold">保存した圃場</h2>
+              <div className="px-4 pt-1">
+        <Link href="/guide" className="text-sm text-blue-700 underline">
+          ダウンロードしたKMZをドローンに入れる手順 →
+        </Link>
+      </div>
         <div className="mb-3 flex flex-wrap gap-2">
           <input
             type="text"
