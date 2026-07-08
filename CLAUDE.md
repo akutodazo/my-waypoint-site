@@ -119,7 +119,7 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 3-9b | 日光下視認性ファーストのUI改修（白背景固定・大型ボタン・琥珀色ルート・点数表示）                 | ✅   |
 | 3-7  | 実地ドッグフーディング（ジンバル角・各点撮影・点数上限の実機確認、/guideとREADMEに環境記入）     | ⬜   |
 
-### Phase 3.5: テンプレート化 🔄 進行中（空撮の合間に実施）
+### Phase 3.5: テンプレート化 ✅ 完了（2026-07-08、検収試験のみ残）
 
 | Step | 内容                                                              | 状態 |
 | ---- | ----------------------------------------------------------------- | ---- |
@@ -128,10 +128,11 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | S2   | use-fieldsフック切り出し（Presenter分割・Repository参照の一元化） | ✅   |
 | S3   | renderHookテスト6本追加（計38本・全層に検査網）                   | ✅   |
 | S6   | 汎用規約をARCHITECTURE.mdへ分離（テンプレート本体）               | ✅   |
-| S5   | 設定の一元化（basePath等）                                        | ⬜   |
-| S7   | README刷新（構成図・設計判断の理由）                              | ⬜   |
-| S8   | docs/decisions.md（設計判断の記録）                               | ⬜   |
-| S9   | docs/new-project.md（立ち上げ手順書＝完成の定義）                 | ⬜   |
+| S5   | 設定の一元化（BASE_PATHをsrc/config.tsへ集約）                    | ✅   |
+| S7   | README刷新（設計判断のWhy表・mermaid構成図）                      | ✅   |
+| S8   | docs/decisions.md（設計判断の記録簿・初期9エントリ）              | ✅   |
+| S9   | docs/new-project.md（立ち上げ手順書＋AIへの発注文＝完成の定義）   | ✅   |
+| 検収 | 別AIセッションに2文書を渡して新規プロジェクト構築の合否判定       | ⬜   |
 
 ### 今後の予定
 
