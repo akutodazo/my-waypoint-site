@@ -91,6 +91,18 @@ export function useWaypointPlanner() {
     );
   };
 
+    const clearRoute = () => {
+    setWaypoints(null);
+    setWarning(null);
+  };
+
+  const clearPolygon = () => {
+    setPolygonState(null);
+    setWaypoints(null);
+    setWarning(null);
+    setError(null);
+  };
+
   const download = async () => {
     if (!waypoints || waypoints.length === 0) {
       setError('先にルートを生成してください');
@@ -116,6 +128,6 @@ export function useWaypointPlanner() {
   return {
     params, updateParam, applyPreset, polygon, waypoints, error, warning,
     setPolygon, generate, download,
-    fields, saveField, loadField, removeField,
+    fields, saveField, loadField, removeField,clearRoute, clearPolygon,
   };
 }
