@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* 屋外（直射日光）での視認性を最優先し、常にライト表示に固定する */
 body {

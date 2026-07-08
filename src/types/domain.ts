@@ -1,16 +1,16 @@
 /** カメラの物理仕様（撮影範囲の計算に使用） */
 export interface CameraSpec {
-  sensorWidth: number;  // mm
+  sensorWidth: number; // mm
   sensorHeight: number; // mm
-  focalLength: number;  // mm
+  focalLength: number; // mm
 }
 
 /** 飛行パラメータ（UIの入力値） */
 export interface FlightParams {
   height: number; // 高度 m
-  speed: number;  // 速度 m/s
-  front: number;  // 進行方向オーバーラップ率 0-1
-  side: number;   // 横方向オーバーラップ率 0-1
+  speed: number; // 速度 m/s
+  front: number; // 進行方向オーバーラップ率 0-1
+  side: number; // 横方向オーバーラップ率 0-1
   angle?: number; // 飛行方向（度）。畝の向きに合わせる
   gimbalPitch?: number; // ジンバル角（度）。-90=真下、未指定は-90扱い
 }
@@ -29,17 +29,17 @@ export type PolygonCoords = [number, number][];
 
 /** 保存される圃場 */
 export interface Field {
-  id: string;            // 一意なID（UUID）
-  name: string;          // 圃場名（例: 「No.46 キャベツ北」）
+  id: string; // 一意なID（UUID）
+  name: string; // 圃場名（例: 「No.46 キャベツ北」）
   polygon: PolygonCoords; // 圃場の境界
-  createdAt: string;     // 作成日時（ISO 8601形式）
+  createdAt: string; // 作成日時（ISO 8601形式）
 }
 
 /** 検証済みの撮影パラメータのセット */
 export interface FlightPreset {
   id: string;
-  label: string;        // ボタンに表示する短い名前
-  description: string;  // 何のための撮影か
+  label: string; // ボタンに表示する短い名前
+  description: string; // 何のための撮影か
   height: number;
   gimbalPitch: number;
   front: number;
