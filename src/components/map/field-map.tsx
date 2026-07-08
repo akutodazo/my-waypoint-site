@@ -45,13 +45,21 @@ export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
       <DrawControl onPolygonDrawn={onPolygonDrawn} />
       <FitBounds polygon={polygon} />
       {polygonLatlngs.length > 0 && (
-        <Polygon positions={polygonLatlngs} pathOptions={{ color: 'green' }} />
+        <Polygon
+          positions={polygonLatlngs}
+          pathOptions={{ color: '#166534', weight: 2, fillOpacity: 0.08 }}
+        />
       )}
       {latlngs.length > 0 && (
-        <Polyline positions={latlngs} pathOptions={{ color: 'blue' }} />
+        <Polyline positions={latlngs} pathOptions={{ color: '#f59e0b', weight: 3 }} />
       )}
       {waypoints?.map(w => (
-        <CircleMarker key={w.index} center={[w.lat, w.lon]} radius={4}>
+        <CircleMarker
+          key={w.index}
+          center={[w.lat, w.lon]}
+          radius={5}
+          pathOptions={{ color: '#b45309', fillColor: '#fbbf24', fillOpacity: 1, weight: 2 }}
+        >
           <Tooltip>{String(w.index)}</Tooltip>
         </CircleMarker>
       ))}
