@@ -21,6 +21,7 @@ CLAUDE.md に書く。
 - Presenter同士は直接会話しない。必要な値は画面（page）が引数として配線する
 - Repositoryの実体を知るのは、それを使うPresenter 1つだけ
 - Serviceは純粋関数。ブラウザAPI・Reactに依存させない（例外は理由をコメントで明記）
+- 環境依存の値（公開パス・URL・外部キー等）は設定ファイル1つに集約し、他はそこからimportする
 
 ### Repositoryの掟
 
