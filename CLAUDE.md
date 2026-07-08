@@ -127,6 +127,8 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 3-6 | DJI Fly転送手順ガイドページ（/guide）※動作確認済み環境の記入は3-7で | ✅ |
 | 3-8a | カメラ定数を実機（Air 3S/Lito X1、換算24mm 4:3）に修正。仕様変更としてテスト期待値も更新 | ✅ |
 | 3-8b | 各点で静止画撮影（startRecord→takePhoto置換・actionGroup番号修正）＋200点超過警告。32テストGREEN | ✅ |
+| 3-9a | ルート・圃場選択のクリア機能（clearRoute / clearPolygon） | ✅ |
+| 3-9b | 日光下視認性ファーストのUI改修（白背景固定・大型ボタン・琥珀色ルート・点数表示） | ✅ |
 | 3-7 | 実地ドッグフーディング（ジンバル角・各点撮影・点数上限の実機確認、/guideとREADMEに環境記入） | ⬜ |
 
 ### 今後の予定
@@ -146,3 +148,6 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 - JSXは`>{children}`のように行末に要素が隠れていることがある。行を足す前に右端まで読む（layout.tsxのchildren二重描画の教訓）
 - カメラ仕様は「35mm判換算」と「物理センサー寸法＋実焦点距離」を混ぜない。換算なら換算で統一する
 - 「'xxx' is assigned a value but never used」警告は、フックで作った値をreturnし忘れているサインのことがある
+- 屋外向けUIは白背景固定（ダークモード無効化）が最強。階層は色よりサイズと太さで作る
+- **コミット前に`git branch --show-current`**（VS Codeなら左下のブランチ名を確認）。mainへの誤コミットが2回発生。復旧は「ブランチでmerge main→push→mainをreset --hard origin/main」
+- HTMLの規格でbuttonの中にbuttonは入れられない（hydrationエラーになる）。エラーは1行目とCode Frameの2か所を読む
