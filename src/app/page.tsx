@@ -11,7 +11,10 @@ import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
 // Leafletはブラウザでしか動かないため、サーバー描画を無効化して読み込む
 const FieldMap = dynamic(
   () => import('@/components/map/field-map').then((m) => m.FieldMap),
-  { ssr: false, loading: () => <p className="p-6 text-zinc-500">地図を読み込み中…</p> },
+  {
+    ssr: false,
+    loading: () => <p className="p-6 text-zinc-500">地図を読み込み中…</p>,
+  },
 );
 
 export default function Home() {
