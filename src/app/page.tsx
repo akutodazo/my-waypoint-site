@@ -7,6 +7,7 @@ import { FieldList } from '@/components/planner/field-list';
 import { ParamForm } from '@/components/planner/param-form';
 import { PresetBar } from '@/components/planner/preset-bar';
 import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
+import { useFields } from '@/hooks/use-fields';
 
 // Leafletはブラウザでしか動かないため、サーバー描画を無効化して読み込む
 const FieldMap = dynamic(
@@ -19,6 +20,7 @@ const FieldMap = dynamic(
 
 export default function Home() {
   const planner = useWaypointPlanner();
+  const fieldStore = useFields(planner.polygon);
 
   return (
     <main className="min-h-screen bg-white text-zinc-900">
@@ -59,10 +61,11 @@ export default function Home() {
         />
 
         <FieldList
-          fields={planner.fields}
-          onSave={planner.saveField}
-          onLoad={planner.loadField}
-          onRemove={planner.removeField}
+          fields={fieldStore.fields}
+          error={fieldStore.error}
+          onSave={fieldStore.saveField}
+          onLoad={(f) => planner.setPolygon(f.polygon)}
+          onRemove={fieldStore.removeField}
         />
       </div>
     </main>

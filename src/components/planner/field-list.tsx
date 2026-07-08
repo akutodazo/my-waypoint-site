@@ -5,13 +5,14 @@ import type { Field } from '@/types/domain';
 
 interface Props {
   fields: Field[];
+  error: string | null;
   onSave: (name: string) => void | Promise<void>;
   onLoad: (field: Field) => void;
   onRemove: (id: string) => void;
 }
 
 /** 保存済み圃場の一覧・保存・読み込み・削除 */
-export function FieldList({ fields, onSave, onLoad, onRemove }: Props) {
+export function FieldList({ fields, error, onSave, onLoad, onRemove }: Props) {
   const [fieldName, setFieldName] = useState('');
 
   return (
@@ -37,6 +38,12 @@ export function FieldList({ fields, onSave, onLoad, onRemove }: Props) {
           保存
         </button>
       </div>
+      {error && (
+        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-800">
+          {error}
+        </p>
+      )}
+
       {fields.length === 0 ? (
         <p className="text-sm text-zinc-500">保存済みの圃場はまだありません</p>
       ) : (
