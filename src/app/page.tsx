@@ -102,6 +102,19 @@ export default function Home() {
             {planner.warning && (
         <p className="px-4 text-amber-700">⚠ {planner.warning}</p>
       )}
+
+            <div className="flex gap-3 px-4">
+        {planner.waypoints && (
+          <button onClick={planner.clearRoute} className="text-sm text-gray-600 underline">
+            ルートを消す
+          </button>
+        )}
+        {planner.polygon && (
+          <button onClick={planner.clearPolygon} className="text-sm text-gray-600 underline">
+            圃場の選択を解除
+          </button>
+        )}
+      </div>
             <div className="border-t p-4">
         <h2 className="mb-2 text-sm font-bold">保存した圃場</h2>
               <div className="px-4 pt-1">
