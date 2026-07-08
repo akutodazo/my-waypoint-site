@@ -1,0 +1,6 @@
+.next/
+out/
+legacy/
+package-lock.json
+public/template.kmz
+public/*.png
