@@ -34,8 +34,9 @@ export function DrawControl({ onPolygonDrawn }: Props) {
 
     const onCreated = (e: L.LeafletEvent) => {
       const layer = (e as L.DrawEvents.Created).layer as L.Polygon;
-      const coords = (layer.getLatLngs()[0] as L.LatLng[])
-        .map(ll => [ll.lng, ll.lat] as [number, number]);
+      const coords = (layer.getLatLngs()[0] as L.LatLng[]).map(
+        (ll) => [ll.lng, ll.lat] as [number, number],
+      );
       drawnItems.clearLayers(); // 図形は残さない（表示は状態から描く方式に統一）
       onPolygonDrawn(coords);
     };

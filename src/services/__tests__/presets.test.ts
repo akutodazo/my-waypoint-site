@@ -3,8 +3,11 @@ import { FLIGHT_PRESETS, getPresetById } from '../presets';
 describe('FLIGHT_PRESETS', () => {
   test('検証済みの3プリセットが定義されている', () => {
     expect(FLIGHT_PRESETS).toHaveLength(3);
-    expect(FLIGHT_PRESETS.map(p => p.id))
-      .toEqual(['overview-20', 'detail-10', 'oblique-10']);
+    expect(FLIGHT_PRESETS.map((p) => p.id)).toEqual([
+      'overview-20',
+      'detail-10',
+      'oblique-10',
+    ]);
   });
 
   test('事前検証で確認した高度とジンバル角の組み合わせと一致する', () => {

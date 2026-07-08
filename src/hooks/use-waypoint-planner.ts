@@ -5,7 +5,13 @@ import { buildKmz } from '@/services/kmz-builder';
 import { saveFile } from '@/lib/save-file';
 import { LocalStorageFieldRepository } from '@/repositories/implementations/local-storage-field-repository';
 import type { IFieldRepository } from '@/repositories/interfaces/i-field-repository';
-import type { Field, FlightParams, FlightPreset, PolygonCoords, Waypoint } from '@/types/domain';
+import type {
+  Field,
+  FlightParams,
+  FlightPreset,
+  PolygonCoords,
+  Waypoint,
+} from '@/types/domain';
 // DJI Fly（Air 3S / Lito X1）のウェイポイント飛行の上限
 const WAYPOINT_LIMIT = 200;
 
@@ -14,7 +20,11 @@ const fieldRepository: IFieldRepository = new LocalStorageFieldRepository();
 
 export function useWaypointPlanner() {
   const [params, setParams] = useState<FlightParams>({
-    height: 50, speed: 5, front: 0.8, side: 0.7, gimbalPitch: -90,
+    height: 50,
+    speed: 5,
+    front: 0.8,
+    side: 0.7,
+    gimbalPitch: -90,
   });
   const [polygon, setPolygonState] = useState<PolygonCoords | null>(null);
   const [waypoints, setWaypoints] = useState<Waypoint[] | null>(null);
@@ -26,7 +36,7 @@ export function useWaypointPlanner() {
     setWaypoints(null); // 圃場を描き直したら古いルートは無効にする
   }, []);
 
-    const [fields, setFields] = useState<Field[]>([]);
+  const [fields, setFields] = useState<Field[]>([]);
 
   // 画面を開いたとき保存済み圃場を読み込む
   useEffect(() => {
@@ -64,9 +74,9 @@ export function useWaypointPlanner() {
   };
 
   const updateParam = (key: keyof FlightParams, value: number) =>
-    setParams(prev => ({ ...prev, [key]: value }));
+    setParams((prev) => ({ ...prev, [key]: value }));
 
-    const applyPreset = (preset: FlightPreset) =>
+  const applyPreset = (preset: FlightPreset) =>
     setParams({
       height: preset.height,
       speed: preset.speed,
@@ -86,12 +96,12 @@ export function useWaypointPlanner() {
     setWarning(
       wps.length > WAYPOINT_LIMIT
         ? `ウェイポイントが${wps.length}点あり、DJI Flyの上限${WAYPOINT_LIMIT}点を超えています。` +
-          '高度を上げるか、圃場を分けて作成してください'
+            '高度を上げるか、圃場を分けて作成してください'
         : null,
     );
   };
 
-    const clearRoute = () => {
+  const clearRoute = () => {
     setWaypoints(null);
     setWarning(null);
   };
@@ -123,11 +133,22 @@ export function useWaypointPlanner() {
     }
   };
 
-  
-
   return {
-    params, updateParam, applyPreset, polygon, waypoints, error, warning,
-    setPolygon, generate, download,
-    fields, saveField, loadField, removeField,clearRoute, clearPolygon,
+    params,
+    updateParam,
+    applyPreset,
+    polygon,
+    waypoints,
+    error,
+    warning,
+    setPolygon,
+    generate,
+    download,
+    fields,
+    saveField,
+    loadField,
+    removeField,
+    clearRoute,
+    clearPolygon,
   };
 }

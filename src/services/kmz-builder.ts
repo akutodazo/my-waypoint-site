@@ -35,7 +35,7 @@ export async function buildKmz(
   }
 
   // ④ ひな型の既存 Placemark を全部消す
-  folder.querySelectorAll('Placemark').forEach(p => p.remove());
+  folder.querySelectorAll('Placemark').forEach((p) => p.remove());
 
   // ⑤ ウェイポイントの数だけ見本を複製し、値を書き換える
   for (const w of waypoints) {
@@ -49,7 +49,7 @@ export async function buildKmz(
       setWpmlAll(pm, 'gimbalPitchRotateAngle', String(options.gimbalPitch));
       setWpmlAll(pm, 'waypointGimbalPitchAngle', String(options.gimbalPitch));
     }
-        if (options.takePhoto) {
+    if (options.takePhoto) {
       // 録画開始（ひな型の設定）を静止画撮影に置き換える
       const funcs = pm.getElementsByTagName('wpml:actionActuatorFunc');
       for (const el of Array.from(funcs)) {

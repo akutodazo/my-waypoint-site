@@ -1,6 +1,9 @@
 import * as turf from '@turf/turf';
 import type {
-  CameraSpec, FlightParams, PolygonCoords, Waypoint,
+  CameraSpec,
+  FlightParams,
+  PolygonCoords,
+  Waypoint,
 } from '@/types/domain';
 
 /**
@@ -17,7 +20,7 @@ export function computeSpacing(params: FlightParams, camera: CameraSpec) {
   const wg = (camera.sensorWidth / camera.focalLength) * params.height;
   const hg = (camera.sensorHeight / camera.focalLength) * params.height;
   return {
-    lineSpacing: wg * (1 - params.side),   // 隣の飛行線との距離(m)
+    lineSpacing: wg * (1 - params.side), // 隣の飛行線との距離(m)
     photoSpacing: hg * (1 - params.front), // 1本の線上で写真を撮る間隔(m)
   };
 }
@@ -33,8 +36,8 @@ export function generateRoute(
   const ring = [...polygonCoords, polygonCoords[0]];
   const poly = turf.polygon([ring]);
 
-  const angle = params.angle ?? 0;      // 飛行方向（0=東西）。畝の向きに合わせる
-  const pivot = turf.centroid(poly);    // 回転の中心＝重心
+  const angle = params.angle ?? 0; // 飛行方向（0=東西）。畝の向きに合わせる
+  const pivot = turf.centroid(poly); // 回転の中心＝重心
 
   // ① 飛行方向が水平になるようポリゴンを -angle 回転
   const rotated = turf.transformRotate(poly, -angle, { pivot });
@@ -49,9 +52,13 @@ export function generateRoute(
   let flip = false;
   // ③ 下から上へ lineSpacing ごとに水平線を引く
   for (let y = minY; y <= maxY; y += stepDeg) {
-    const scan = turf.lineString([[minX - 0.001, y], [maxX + 0.001, y]]);
-    const hits = turf.lineIntersect(scan, rotated).features
-      .map(f => f.geometry.coordinates as [number, number])
+    const scan = turf.lineString([
+      [minX - 0.001, y],
+      [maxX + 0.001, y],
+    ]);
+    const hits = turf
+      .lineIntersect(scan, rotated)
+      .features.map((f) => f.geometry.coordinates as [number, number])
       .sort((a, b) => a[0] - b[0]);
     if (hits.length < 2) continue;
 
@@ -76,22 +83,27 @@ export function generateRoute(
 
   // ⑦ ウェイポイント列（内部形式）に整える
   return (back.geometry.coordinates as [number, number][]).map((c, i) => ({
-    index: i, lon: c[0], lat: c[1],
-    height: params.height, speed: params.speed,
+    index: i,
+    lon: c[0],
+    lat: c[1],
+    height: params.height,
+    speed: params.speed,
   }));
 }
 
 // 2点間を distance(m) ごとに分割した中間点を返す
 function densify(
-  a: [number, number], b: [number, number], distance: number,
+  a: [number, number],
+  b: [number, number],
+  distance: number,
 ): [number, number][] {
   const total = turf.distance(a, b, { units: 'meters' });
   const bearing = turf.bearing(a, b);
   const out: [number, number][] = [];
   for (let d = distance; d < total; d += distance) {
     out.push(
-      turf.destination(a, d, bearing, { units: 'meters' })
-        .geometry.coordinates as [number, number],
+      turf.destination(a, d, bearing, { units: 'meters' }).geometry
+        .coordinates as [number, number],
     );
   }
   return out;

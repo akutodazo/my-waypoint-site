@@ -8,8 +8,11 @@ import { FLIGHT_PRESETS } from '@/services/presets';
 
 // Leafletはブラウザでしか動かないため、サーバー描画を無効化して読み込む
 const FieldMap = dynamic(
-  () => import('@/components/map/field-map').then(m => m.FieldMap),
-  { ssr: false, loading: () => <p className="p-6 text-zinc-500">地図を読み込み中…</p> },
+  () => import('@/components/map/field-map').then((m) => m.FieldMap),
+  {
+    ssr: false,
+    loading: () => <p className="p-6 text-zinc-500">地図を読み込み中…</p>,
+  },
 );
 
 export default function Home() {
@@ -40,7 +43,7 @@ export default function Home() {
             撮影設定
           </h2>
           <div className="flex gap-3 overflow-x-auto pb-1">
-            {FLIGHT_PRESETS.map(preset => (
+            {FLIGHT_PRESETS.map((preset) => (
               <button
                 key={preset.id}
                 onClick={() => planner.applyPreset(preset)}
@@ -58,45 +61,63 @@ export default function Home() {
                 type="number"
                 className="mt-1.5 block w-full rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-lg font-bold"
                 value={planner.params.height}
-                onChange={e => planner.updateParam('height', Number(e.target.value))}
+                onChange={(e) =>
+                  planner.updateParam('height', Number(e.target.value))
+                }
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-zinc-600">速度(m/s)</span>
+              <span className="text-sm font-medium text-zinc-600">
+                速度(m/s)
+              </span>
               <input
                 type="number"
                 className="mt-1.5 block w-full rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-lg font-bold"
                 value={planner.params.speed}
-                onChange={e => planner.updateParam('speed', Number(e.target.value))}
+                onChange={(e) =>
+                  planner.updateParam('speed', Number(e.target.value))
+                }
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-zinc-600">前方重なり(%)</span>
+              <span className="text-sm font-medium text-zinc-600">
+                前方重なり(%)
+              </span>
               <input
                 type="number"
                 className="mt-1.5 block w-full rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-lg font-bold"
                 value={planner.params.front * 100}
-                onChange={e => planner.updateParam('front', Number(e.target.value) / 100)}
+                onChange={(e) =>
+                  planner.updateParam('front', Number(e.target.value) / 100)
+                }
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-zinc-600">横重なり(%)</span>
+              <span className="text-sm font-medium text-zinc-600">
+                横重なり(%)
+              </span>
               <input
                 type="number"
                 className="mt-1.5 block w-full rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-lg font-bold"
                 value={planner.params.side * 100}
-                onChange={e => planner.updateParam('side', Number(e.target.value) / 100)}
+                onChange={(e) =>
+                  planner.updateParam('side', Number(e.target.value) / 100)
+                }
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-zinc-600">ジンバル角(度)</span>
+              <span className="text-sm font-medium text-zinc-600">
+                ジンバル角(度)
+              </span>
               <input
                 type="number"
                 max={0}
                 min={-90}
                 className="mt-1.5 block w-full rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-lg font-bold"
                 value={planner.params.gimbalPitch ?? -90}
-                onChange={e => planner.updateParam('gimbalPitch', Number(e.target.value))}
+                onChange={(e) =>
+                  planner.updateParam('gimbalPitch', Number(e.target.value))
+                }
               />
             </label>
           </div>
@@ -121,7 +142,11 @@ export default function Home() {
           {planner.waypoints && (
             <div className="flex items-center justify-between rounded-xl bg-zinc-100 px-4 py-3">
               <p className="text-sm font-medium">
-                ルート生成済み：<span className="text-lg font-bold">{planner.waypoints.length}</span> 点
+                ルート生成済み：
+                <span className="text-lg font-bold">
+                  {planner.waypoints.length}
+                </span>{' '}
+                点
               </p>
               <button
                 onClick={planner.clearRoute}
@@ -162,7 +187,7 @@ export default function Home() {
               placeholder="圃場名（例: No.46 キャベツ北）"
               className="min-w-0 flex-1 rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-base"
               value={fieldName}
-              onChange={e => setFieldName(e.target.value)}
+              onChange={(e) => setFieldName(e.target.value)}
             />
             <button
               onClick={async () => {
@@ -175,10 +200,12 @@ export default function Home() {
             </button>
           </div>
           {planner.fields.length === 0 ? (
-            <p className="text-sm text-zinc-500">保存済みの圃場はまだありません</p>
+            <p className="text-sm text-zinc-500">
+              保存済みの圃場はまだありません
+            </p>
           ) : (
             <ul className="space-y-3">
-              {planner.fields.map(f => (
+              {planner.fields.map((f) => (
                 <li
                   key={f.id}
                   className="flex items-center gap-4 rounded-xl border-2 border-zinc-200 px-4 py-3"
