@@ -3,7 +3,7 @@
 # CLAUDE.md
 
 このファイルは、このリポジトリでClaude Code（および開発者自身）が作業する際のガイダンスです。
-
+**汎用の設計規約は [ARCHITECTURE.md](ARCHITECTURE.md) を参照。ここにはこのプロジェクト固有の知識だけを書く。**
 ## プロジェクト概要
 
 **my-waypoint-site** — 農業従事者が専門知識なしでドローンのグリッド飛行ルートを作成できるWebツール。
@@ -20,6 +20,9 @@
 - `npm run test:watch` — ファイル変更を監視してテスト自動実行
 - `npm run lint` — ESLint実行
 - `npm run build` — 本番ビルド
+- `npm run format` — Prettierで全ファイル整形
+- `npm run format:check` — 整形チェック（CIと同じ）
+
 
 ## アーキテクチャ（3層構造）
 
@@ -43,29 +46,12 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 
 ## ルール
 
-### Git
+## プロジェクト固有ルール
 
-- 変更を加えたら都度コミットすること
-- TDDのREDコミット（`test: ...（RED）`）とGREENコミット（`feat: ...（GREEN）`）を分けること
-- コミットメッセージは `feat:` `fix:` `test:` `chore:` `docs:` の接頭辞をつけること
-- `main`は常に動く状態を保つ。開発は`feature/*`ブランチで行うこと
-
-### テスト駆動開発（TDD）
-
-1. ユニットテストを先に書く
-2. テストが失敗（RED）することを確認する
-3. 実装してテストが成功（GREEN）することを確認する
-
-- 既存のユニットテストは変更しない（仕様変更時のみ、理由をコミットメッセージに書いて変更）
-- Service層は純粋関数として実装し、ブラウザAPIやReactに依存させない（kmz-builderのDOMParserのみ例外）
-
-### TypeScript / Next.js
-
-- `any`型の使用禁止
-- ファイル名は`kebab-case`（例: `route-generator.ts`）
 - 座標の並びは**[経度, 緯度]**（Turf/GeoJSON標準）。Leafletは[緯度, 経度]なので変換箇所に注意
 - Next.js固有のAPIを書く前に `node_modules/next/dist/docs/` の該当ガイドを確認すること（AGENTS.md参照）
-
+- Service層の例外: kmz-builderのみDOMParserを使用（WPML書き換えのため）
+- `legacy/` は参照用に保持、変更禁止
 ### ドメイン知識（重要な定数・制約）
 
 - 対象機体: DJI Air 3S（広角、FOV 84°）/ DJI Lito X1（FOV 82.1°）。どちらも35mm判換算24mm・4:3
@@ -131,6 +117,20 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 | 3-9a | ルート・圃場選択のクリア機能（clearRoute / clearPolygon）                                        | ✅   |
 | 3-9b | 日光下視認性ファーストのUI改修（白背景固定・大型ボタン・琥珀色ルート・点数表示）                 | ✅   |
 | 3-7  | 実地ドッグフーディング（ジンバル角・各点撮影・点数上限の実機確認、/guideとREADMEに環境記入）     | ⬜   |
+
+### Phase 3.5: テンプレート化 🔄 進行中（空撮の合間に実施）
+
+| Step | 内容                                                             | 状態 |
+| ---- | ---------------------------------------------------------------- | ---- |
+| S4   | Prettier導入（設定・スクリプト・CI検問）                         | ✅   |
+| S1   | page.tsxを4部品に分割（62行の組立係に）                          | ✅   |
+| S2   | use-fieldsフック切り出し（Presenter分割・Repository参照の一元化）| ✅   |
+| S3   | renderHookテスト6本追加（計38本・全層に検査網）                  | ✅   |
+| S6   | 汎用規約をARCHITECTURE.mdへ分離（テンプレート本体）              | ✅   |
+| S5   | 設定の一元化（basePath等）                                       | ⬜   |
+| S7   | README刷新（構成図・設計判断の理由）                             | ⬜   |
+| S8   | docs/decisions.md（設計判断の記録）                              | ⬜   |
+| S9   | docs/new-project.md（立ち上げ手順書＝完成の定義）                | ⬜   |
 
 ### 今後の予定
 

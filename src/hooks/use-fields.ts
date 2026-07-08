@@ -23,7 +23,7 @@ export function useFields(polygon: PolygonCoords | null) {
       setError('先に圃場を描いてください');
       return;
     }
-    if (!name.trim()) {
+  if (!name.trim()) {
       setError('圃場名を入力してください');
       return;
     }
