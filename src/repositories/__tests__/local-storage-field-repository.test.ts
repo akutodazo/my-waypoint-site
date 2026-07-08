@@ -7,13 +7,21 @@ import type { Field } from '@/types/domain';
 const fieldA: Field = {
   id: 'aaa-111',
   name: 'No.46 キャベツ北',
-  polygon: [[140.76, 41.84], [140.761, 41.84], [140.761, 41.841]],
+  polygon: [
+    [140.76, 41.84],
+    [140.761, 41.84],
+    [140.761, 41.841],
+  ],
   createdAt: '2026-07-04T09:00:00.000Z',
 };
 const fieldB: Field = {
   id: 'bbb-222',
   name: 'No.19 バレイショ',
-  polygon: [[140.77, 41.85], [140.771, 41.85], [140.771, 41.851]],
+  polygon: [
+    [140.77, 41.85],
+    [140.771, 41.85],
+    [140.771, 41.851],
+  ],
   createdAt: '2026-07-04T10:00:00.000Z',
 };
 
@@ -34,7 +42,7 @@ describe('LocalStorageFieldRepository', () => {
     await repo.save(fieldB);
     const all = await repo.findAll();
     expect(all).toHaveLength(2);
-    expect(all.map(f => f.name)).toContain('No.46 キャベツ北');
+    expect(all.map((f) => f.name)).toContain('No.46 キャベツ北');
   });
 
   test('同じIDでsaveすると上書きされ、重複しない', async () => {

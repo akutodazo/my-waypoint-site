@@ -9,13 +9,16 @@ import type { Waypoint } from '@/types/domain';
 
 // テストの正解データ＝DJIFlyが出力した本物のKMZ
 const templatePath = path.join(
-  process.cwd(), 'legacy', 'samples', 'dji-fly-original.kmz',
+  process.cwd(),
+  'legacy',
+  'samples',
+  'dji-fly-original.kmz',
 );
 const template = fs.readFileSync(templatePath);
 
 const waypoints: Waypoint[] = [
-  { index: 0, lon: 140.760, lat: 41.840, height: 30, speed: 5 },
-  { index: 1, lon: 140.761, lat: 41.840, height: 30, speed: 5 },
+  { index: 0, lon: 140.76, lat: 41.84, height: 30, speed: 5 },
+  { index: 1, lon: 140.761, lat: 41.84, height: 30, speed: 5 },
   { index: 2, lon: 140.761, lat: 41.841, height: 30, speed: 5 },
 ];
 
@@ -46,14 +49,16 @@ describe('buildKmz', () => {
     const { doc } = await parseWpml(out);
     const first = doc.getElementsByTagName('Placemark')[0];
 
-    expect(first.getElementsByTagName('coordinates')[0].textContent)
-      .toBe('140.76,41.84');
-    expect(first.getElementsByTagName('wpml:index')[0].textContent)
-      .toBe('0');
-    expect(first.getElementsByTagName('wpml:executeHeight')[0].textContent)
-      .toBe('30');
-    expect(first.getElementsByTagName('wpml:waypointSpeed')[0].textContent)
-      .toBe('5');
+    expect(first.getElementsByTagName('coordinates')[0].textContent).toBe(
+      '140.76,41.84',
+    );
+    expect(first.getElementsByTagName('wpml:index')[0].textContent).toBe('0');
+    expect(
+      first.getElementsByTagName('wpml:executeHeight')[0].textContent,
+    ).toBe('30');
+    expect(
+      first.getElementsByTagName('wpml:waypointSpeed')[0].textContent,
+    ).toBe('5');
   });
 
   test('ひな型の機体設定（missionConfig）が保持される', async () => {
@@ -111,8 +116,9 @@ describe('buildKmz - 撮影アクション', () => {
     const { doc } = await parseWpml(out);
     const placemarks = Array.from(doc.getElementsByTagName('Placemark'));
     for (const pm of placemarks) {
-      const funcs = Array.from(pm.getElementsByTagName('wpml:actionActuatorFunc'))
-        .map(el => el.textContent);
+      const funcs = Array.from(
+        pm.getElementsByTagName('wpml:actionActuatorFunc'),
+      ).map((el) => el.textContent);
       expect(funcs).toContain('takePhoto');
     }
   });
@@ -127,10 +133,14 @@ describe('buildKmz - 撮影アクション', () => {
     const out = await buildKmz(template, waypoints, { takePhoto: true });
     const { doc } = await parseWpml(out);
     const placemarks = Array.from(doc.getElementsByTagName('Placemark'));
-    placemarks.forEach(pm => {
+    placemarks.forEach((pm) => {
       const index = pm.getElementsByTagName('wpml:index')[0].textContent;
-      const starts = Array.from(pm.getElementsByTagName('wpml:actionGroupStartIndex'));
-      const ends = Array.from(pm.getElementsByTagName('wpml:actionGroupEndIndex'));
+      const starts = Array.from(
+        pm.getElementsByTagName('wpml:actionGroupStartIndex'),
+      );
+      const ends = Array.from(
+        pm.getElementsByTagName('wpml:actionGroupEndIndex'),
+      );
       for (const el of [...starts, ...ends]) {
         expect(el.textContent).toBe(index);
       }

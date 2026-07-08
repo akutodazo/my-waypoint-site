@@ -2,7 +2,13 @@
 
 import { useEffect } from 'react';
 import {
-  MapContainer, TileLayer, Polyline, Polygon, CircleMarker, Tooltip, useMap,
+  MapContainer,
+  TileLayer,
+  Polyline,
+  Polygon,
+  CircleMarker,
+  Tooltip,
+  useMap,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
@@ -20,14 +26,17 @@ function FitBounds({ polygon }: { polygon: PolygonCoords | null }) {
   const map = useMap();
   useEffect(() => {
     if (polygon && polygon.length >= 3) {
-      map.fitBounds(polygon.map(([lng, lat]) => [lat, lng] as [number, number]));
+      map.fitBounds(
+        polygon.map(([lng, lat]) => [lat, lng] as [number, number]),
+      );
     }
   }, [map, polygon]);
   return null;
 }
 
 export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
-  const latlngs = waypoints?.map(w => [w.lat, w.lon] as [number, number]) ?? [];
+  const latlngs =
+    waypoints?.map((w) => [w.lat, w.lon] as [number, number]) ?? [];
   const polygonLatlngs =
     polygon?.map(([lng, lat]) => [lat, lng] as [number, number]) ?? [];
 
@@ -51,14 +60,22 @@ export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
         />
       )}
       {latlngs.length > 0 && (
-        <Polyline positions={latlngs} pathOptions={{ color: '#f59e0b', weight: 3 }} />
+        <Polyline
+          positions={latlngs}
+          pathOptions={{ color: '#f59e0b', weight: 3 }}
+        />
       )}
-      {waypoints?.map(w => (
+      {waypoints?.map((w) => (
         <CircleMarker
           key={w.index}
           center={[w.lat, w.lon]}
           radius={5}
-          pathOptions={{ color: '#b45309', fillColor: '#fbbf24', fillOpacity: 1, weight: 2 }}
+          pathOptions={{
+            color: '#b45309',
+            fillColor: '#fbbf24',
+            fillOpacity: 1,
+            weight: 2,
+          }}
         >
           <Tooltip>{String(w.index)}</Tooltip>
         </CircleMarker>

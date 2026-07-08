@@ -18,18 +18,18 @@ export class LocalStorageFieldRepository implements IFieldRepository {
 
   async findById(id: string): Promise<Field | null> {
     const all = await this.findAll();
-    return all.find(f => f.id === id) ?? null;
+    return all.find((f) => f.id === id) ?? null;
   }
 
   async save(field: Field): Promise<void> {
     const all = await this.findAll();
-    const rest = all.filter(f => f.id !== field.id); // 同IDを除いてから
-    this.write([...rest, field]);                    // 追加＝上書き（upsert）
+    const rest = all.filter((f) => f.id !== field.id); // 同IDを除いてから
+    this.write([...rest, field]); // 追加＝上書き（upsert）
   }
 
   async delete(id: string): Promise<void> {
     const all = await this.findAll();
-    this.write(all.filter(f => f.id !== id));
+    this.write(all.filter((f) => f.id !== id));
   }
 
   private write(fields: Field[]): void {
