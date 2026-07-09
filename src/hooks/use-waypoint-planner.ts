@@ -3,6 +3,12 @@
 import { useCallback, useState } from 'react';
 import { saveFile } from '@/lib/save-file';
 import { buildKmz } from '@/services/kmz-builder';
+import {
+  estimateFlightSeconds,
+  formatArea,
+  formatDuration,
+  polygonAreaSqm,
+} from '@/services/flight-metrics';
 import { generateRoute } from '@/services/route-generator';
 import type {
   FlightParams,
@@ -93,6 +99,13 @@ export function useWaypointPlanner() {
     }
   };
 
+  // 派生値（描画・生成の状態から毎回計算）
+  const areaText = polygon ? formatArea(polygonAreaSqm(polygon)) : null;
+  const flightText =
+    waypoints && waypoints.length > 0
+      ? formatDuration(estimateFlightSeconds(waypoints, params.speed))
+      : null;
+
   return {
     params,
     updateParam,
@@ -106,5 +119,7 @@ export function useWaypointPlanner() {
     error,
     warning,
     download,
+    areaText,
+    flightText,
   };
 }
