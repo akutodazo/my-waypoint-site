@@ -1,9 +1,15 @@
 @import 'tailwindcss';
 
-/* 屋外（直射日光）での視認性を最優先し、常にライト表示に固定する */
+/* 屋外（直射日光）での視認性を最優先し、常にライト表示に固定する。
+   ページは淡いグレー、カードは白で奥行きを出す（高輝度は維持）。 */
 body {
-  background: #ffffff;
-  color: #18181b;
+  background: #fafafa; /* zinc-50 */
+  color: #18181b; /* zinc-900 */
+}
+
+/* 数値入力の増減スピナーは屋外の指操作で誤爆しやすいので控えめに（表示は残す） */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 /* タッチ端末（スマホ・タブレット）でleaflet-drawのツールバーを大きくする */
