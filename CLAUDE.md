@@ -52,6 +52,7 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 - Next.js固有のAPIを書く前に `node_modules/next/dist/docs/` の該当ガイドを確認すること（AGENTS.md参照）
 - Service層の例外: kmz-builderのみDOMParserを使用（WPML書き換えのため）
 - `legacy/` は参照用に保持、変更禁止
+- **地図オーバーレイの配置ゾーン**（重複防止）: 左上コーナー=Leaflet標準（ズーム＋描画ツールバー縦積み） / その右(left-14)=検索 / 右上=操作ボタン(削除等) / 左下・右下=予約。React製オーバーレイは絶対配置+z-[1000]、1ゾーン1コンポーネント。詳細は`src/components/map/field-map.tsx`冒頭コメント。
 
 ### ドメイン知識（重要な定数・制約）
 

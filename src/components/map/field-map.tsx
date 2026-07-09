@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -13,7 +13,8 @@ import {
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import { DrawControl } from './draw-control';
-import type { PolygonCoords, Waypoint } from '@/types/domain';
+import { SearchBox } from './search-box';
+import type { PlaceResult, PolygonCoords, Waypoint } from '@/types/domain';
 
 interface Props {
   polygon: PolygonCoords | null;
@@ -34,52 +35,80 @@ function FitBounds({ polygon }: { polygon: PolygonCoords | null }) {
   return null;
 }
 
+/** 検索で選ばれた地点へ地図を移動させる */
+function FlyTo({ target }: { target: PlaceResult | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (target) map.setView([target.lat, target.lng], 17);
+  }, [map, target]);
+  return null;
+}
+
+/**
+ * 地図オーバーレイの配置ゾーン（重複防止のため必ずここに従う）
+ * ┌──────────────────────────────────┐
+ * │ 左上コーナー: Leaflet標準（ズーム＋描画ツールバー、縦積み） │
+ * │ その右(left-14): 検索ボックス     右上: 操作ボタン(削除等) │
+ * │                                                  │
+ * │ 左下・右下: (予約・未使用)                        │
+ * └──────────────────────────────────┘
+ * - Leaflet標準コントロール（zoom / leaflet-draw）は左上コーナーに縦積みで残す。
+ * - 検索ボックスは left-14 でその右にずらし、標準コントロールと重ねない。
+ * - React製オーバーレイは絶対配置 + z-[1000]。1ゾーンに1コンポーネントまで。
+ * - 新しいオーバーレイは空きゾーン（右上→左下→右下の順）を使う。
+ */
 export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
+  const [flyTarget, setFlyTarget] = useState<PlaceResult | null>(null);
   const latlngs =
     waypoints?.map((w) => [w.lat, w.lon] as [number, number]) ?? [];
   const polygonLatlngs =
     polygon?.map(([lng, lat]) => [lat, lng] as [number, number]) ?? [];
 
   return (
-    <MapContainer
-      center={[41.84, 140.76]}
-      zoom={16}
-      className="h-[60vh] w-full sm:h-[70vh]"
-    >
-      <TileLayer
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-        attribution="Esri"
-        maxZoom={19}
-      />
-      <DrawControl onPolygonDrawn={onPolygonDrawn} />
-      <FitBounds polygon={polygon} />
-      {polygonLatlngs.length > 0 && (
-        <Polygon
-          positions={polygonLatlngs}
-          pathOptions={{ color: '#166534', weight: 2, fillOpacity: 0.08 }}
+    <div className="relative">
+      {/* 左上コーナーの右: 検索ボックス */}
+      <SearchBox onSelect={setFlyTarget} />
+      <MapContainer
+        center={[41.84, 140.76]}
+        zoom={16}
+        className="h-[60vh] w-full sm:h-[70vh]"
+      >
+        <TileLayer
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          attribution="Esri"
+          maxZoom={19}
         />
-      )}
-      {latlngs.length > 0 && (
-        <Polyline
-          positions={latlngs}
-          pathOptions={{ color: '#f59e0b', weight: 3 }}
-        />
-      )}
-      {waypoints?.map((w) => (
-        <CircleMarker
-          key={w.index}
-          center={[w.lat, w.lon]}
-          radius={5}
-          pathOptions={{
-            color: '#b45309',
-            fillColor: '#fbbf24',
-            fillOpacity: 1,
-            weight: 2,
-          }}
-        >
-          <Tooltip>{String(w.index)}</Tooltip>
-        </CircleMarker>
-      ))}
-    </MapContainer>
+        <DrawControl onPolygonDrawn={onPolygonDrawn} />
+        <FitBounds polygon={polygon} />
+        <FlyTo target={flyTarget} />
+        {polygonLatlngs.length > 0 && (
+          <Polygon
+            positions={polygonLatlngs}
+            pathOptions={{ color: '#166534', weight: 2, fillOpacity: 0.08 }}
+          />
+        )}
+        {latlngs.length > 0 && (
+          <Polyline
+            positions={latlngs}
+            pathOptions={{ color: '#f59e0b', weight: 3 }}
+          />
+        )}
+        {waypoints?.map((w) => (
+          <CircleMarker
+            key={w.index}
+            center={[w.lat, w.lon]}
+            radius={5}
+            pathOptions={{
+              color: '#b45309',
+              fillColor: '#fbbf24',
+              fillOpacity: 1,
+              weight: 2,
+            }}
+          >
+            <Tooltip>{String(w.index)}</Tooltip>
+          </CircleMarker>
+        ))}
+      </MapContainer>
+    </div>
   );
 }

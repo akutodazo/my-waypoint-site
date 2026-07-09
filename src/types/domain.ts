@@ -35,6 +35,13 @@ export interface Field {
   createdAt: string; // 作成日時（ISO 8601形式）
 }
 
+/** 場所検索の結果1件 */
+export interface PlaceResult {
+  name: string; // 表示名（例: 「北海道河西郡更別村」）
+  lat: number;
+  lng: number;
+}
+
 /** 検証済みの撮影パラメータのセット */
 export interface FlightPreset {
   id: string;
