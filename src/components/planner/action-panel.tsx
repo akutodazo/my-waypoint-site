@@ -21,42 +21,45 @@ export function ActionPanel({
   onDownload,
 }: Props) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-3 sm:flex-row">
         <button
           onClick={onGenerate}
-          className="h-14 flex-1 rounded-xl bg-green-800 text-lg font-bold text-white active:bg-green-900"
+          className="h-14 flex-1 rounded-xl bg-green-800 text-lg font-bold text-white shadow-sm active:bg-green-900"
         >
           ルート生成
         </button>
         <button
           onClick={onDownload}
-          className="h-14 flex-1 rounded-xl bg-zinc-900 text-lg font-bold text-white active:bg-black"
+          className="h-14 flex-1 rounded-xl bg-zinc-900 text-lg font-bold text-white shadow-sm active:bg-black"
         >
           KMZダウンロード
         </button>
       </div>
 
-      {areaText && (
-        <div className="rounded-xl bg-zinc-100 px-4 py-3">
-          <p className="text-sm font-medium text-zinc-600">推定面積</p>
-          <p className="text-lg font-bold">{areaText}</p>
-        </div>
-      )}
-
-      {waypointCount !== null && (
-        <div className="rounded-xl bg-zinc-100 px-4 py-3">
-          <p className="text-sm font-medium text-zinc-600">
-            ウェイポイント数 ／ 推定飛行時間
-          </p>
-          <p className="text-lg font-bold">
-            {waypointCount} 点
-            {flightText && <span className="text-zinc-400"> ・ </span>}
-            {flightText}
-          </p>
-          <p className="text-xs text-zinc-400">
-            ※飛行時間は目安（加減速・旋回で前後します）
-          </p>
+      {(areaText || waypointCount !== null) && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {areaText && (
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3">
+              <p className="text-sm font-semibold text-zinc-600">推定面積</p>
+              <p className="text-xl font-bold text-zinc-900">{areaText}</p>
+            </div>
+          )}
+          {waypointCount !== null && (
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3">
+              <p className="text-sm font-semibold text-zinc-600">
+                点数 ／ 推定飛行時間
+              </p>
+              <p className="text-xl font-bold text-zinc-900">
+                {waypointCount} 点
+                {flightText && <span className="text-zinc-300"> ／ </span>}
+                {flightText}
+              </p>
+              <p className="mt-0.5 text-xs text-zinc-500">
+                ※飛行時間は目安（加減速・旋回で前後します）
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -66,7 +69,7 @@ export function ActionPanel({
         </p>
       )}
       {warning && (
-        <p className="rounded-xl bg-amber-50 px-4 py-3 text-base font-bold text-amber-800">
+        <p className="rounded-xl bg-amber-50 px-4 py-3 text-base font-bold text-amber-900">
           ⚠ {warning}
         </p>
       )}

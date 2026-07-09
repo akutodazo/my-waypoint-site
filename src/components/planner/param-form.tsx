@@ -8,8 +8,8 @@ interface Props {
 }
 
 const INPUT =
-  'mt-1.5 block w-full rounded-xl border-2 border-zinc-200 px-3 py-2.5 text-lg font-bold';
-const LABEL = 'text-sm font-medium text-zinc-600';
+  'mt-1.5 block w-full rounded-xl border-2 border-zinc-300 px-3 py-2.5 text-lg font-bold text-zinc-900 focus-visible:border-green-800 focus-visible:outline-none';
+const LABEL = 'text-sm font-semibold text-zinc-700';
 
 /** 飛行パラメータの入力フォーム */
 export function ParamForm({ params, onChange }: Props) {
