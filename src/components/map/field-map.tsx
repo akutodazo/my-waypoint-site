@@ -8,7 +8,6 @@ import {
   Polygon,
   CircleMarker,
   Tooltip,
-  ZoomControl,
   useMap,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -47,14 +46,16 @@ function FlyTo({ target }: { target: PlaceResult | null }) {
 
 /**
  * 地図オーバーレイの配置ゾーン（重複防止のため必ずここに従う）
- * ┌─────────────────────────────┐
- * │ 左上: 検索ボックス(SearchBox)  右上: 操作ボタン(削除等) │
- * │                                              │
- * │ 左下: (予約・未使用)          右下: ズーム(ZoomControl) │
- * └─────────────────────────────┘
- * - 各ゾーンは絶対配置 + z-[1000]。1ゾーンに1コンポーネントまで。
- * - Leaflet既定のズームは左上に出るため zoomControl={false} で無効化し右下へ再配置。
- * - 新しいオーバーレイを足すときは空きゾーンを使い、既存ゾーンと重ねない。
+ * ┌──────────────────────────────────┐
+ * │ 左上コーナー: Leaflet標準（ズーム＋描画ツールバー、縦積み） │
+ * │ その右(left-14): 検索ボックス     右上: 操作ボタン(削除等) │
+ * │                                                  │
+ * │ 左下・右下: (予約・未使用)                        │
+ * └──────────────────────────────────┘
+ * - Leaflet標準コントロール（zoom / leaflet-draw）は左上コーナーに縦積みで残す。
+ * - 検索ボックスは left-14 でその右にずらし、標準コントロールと重ねない。
+ * - React製オーバーレイは絶対配置 + z-[1000]。1ゾーンに1コンポーネントまで。
+ * - 新しいオーバーレイは空きゾーン（右上→左下→右下の順）を使う。
  */
 export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
   const [flyTarget, setFlyTarget] = useState<PlaceResult | null>(null);
@@ -65,16 +66,13 @@ export function FieldMap({ polygon, waypoints, onPolygonDrawn }: Props) {
 
   return (
     <div className="relative">
-      {/* 左上ゾーン */}
+      {/* 左上コーナーの右: 検索ボックス */}
       <SearchBox onSelect={setFlyTarget} />
       <MapContainer
         center={[41.84, 140.76]}
         zoom={16}
-        zoomControl={false}
         className="h-[60vh] w-full sm:h-[70vh]"
       >
-        {/* 右下ゾーン: ズーム */}
-        <ZoomControl position="bottomright" />
         <TileLayer
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           attribution="Esri"

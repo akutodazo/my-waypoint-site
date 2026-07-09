@@ -12,7 +12,7 @@ export function SearchBox({ onSelect }: Props) {
   const search = usePlaceSearch();
 
   return (
-    <div className="absolute left-3 top-3 z-[1000] w-64 max-w-[calc(100%-1.5rem)]">
+    <div className="absolute left-14 right-3 top-3 z-[1000] sm:right-auto sm:w-72">
       <form
         onSubmit={(e) => {
           e.preventDefault();
