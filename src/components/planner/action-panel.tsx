@@ -3,6 +3,8 @@
 interface Props {
   waypointCount: number | null; // ルート未生成ならnull
   hasPolygon: boolean;
+  areaText: string | null; // 推定面積（polygon有時）
+  flightText: string | null; // 推定飛行時間（route有時）
   error: string | null;
   warning: string | null;
   onGenerate: () => void;
@@ -15,6 +17,8 @@ interface Props {
 export function ActionPanel({
   waypointCount,
   hasPolygon,
+  areaText,
+  flightText,
   error,
   warning,
   onGenerate,
@@ -39,15 +43,31 @@ export function ActionPanel({
         </button>
       </div>
 
+      {areaText && (
+        <div className="rounded-xl bg-zinc-100 px-4 py-3">
+          <p className="text-sm font-medium text-zinc-600">推定面積</p>
+          <p className="text-lg font-bold">{areaText}</p>
+        </div>
+      )}
+
       {waypointCount !== null && (
         <div className="flex items-center justify-between rounded-xl bg-zinc-100 px-4 py-3">
-          <p className="text-sm font-medium">
-            ルート生成済み：
-            <span className="text-lg font-bold">{waypointCount}</span> 点
-          </p>
+          <div>
+            <p className="text-sm font-medium text-zinc-600">
+              ウェイポイント数 ／ 推定飛行時間
+            </p>
+            <p className="text-lg font-bold">
+              {waypointCount} 点
+              {flightText && <span className="text-zinc-400"> ・ </span>}
+              {flightText}
+            </p>
+            <p className="text-xs text-zinc-400">
+              ※飛行時間は目安（加減速・旋回で前後します）
+            </p>
+          </div>
           <button
             onClick={onClearRoute}
-            className="text-sm font-bold text-zinc-600 underline underline-offset-4"
+            className="shrink-0 text-sm font-bold text-zinc-600 underline underline-offset-4"
           >
             ルートを消す
           </button>

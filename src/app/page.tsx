@@ -52,6 +52,8 @@ export default function Home() {
         <ActionPanel
           waypointCount={planner.waypoints?.length ?? null}
           hasPolygon={planner.polygon !== null}
+          areaText={planner.areaText}
+          flightText={planner.flightText}
           error={planner.error}
           warning={planner.warning}
           onGenerate={planner.generate}
