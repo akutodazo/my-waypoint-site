@@ -64,6 +64,8 @@ Repository層 (src/repositories/)        … データ保存の抽象化（inter
 - KMZ内部構造: `wpmz/template.kml` + `wpmz/waylines.wpml`（WPML 1.0.2、Placemarkの複製で経路を書き換える）
 - 撮影アクション: ひな型の`startRecord`（動画）を`takePhoto`（静止画）に置換して各点撮影。`buildKmz`のオプションで、フックは常に`takePhoto: true`を渡す
 - DJI Fly上書きは非公式手法。動作確認済みバージョンをREADMEと/guideに記録すること
+- **配信・飛行フロー（Air 3S + RC 2、2026-07-09確定）**: ①端末(スマホ/PC)のPWAでKMZ生成 → ②USB-CでRC 2をPC接続 → ③DJI Flyでダミーのウェイポイントミッション作成 → ④`/Android/data/dji.go.v5/files/waypoint`のKMZを差し替え → ⑤DJI Flyで確認・アップロード・飛行
+- **RC 2制約**: DJIがアプリ導入をブロック→PWA/ブラウザ直載せ不可（RC Proは可）。`/Android/data`保護＋ファイルマネージャ無しで差し替えは実質PC必須。現場PCなしでは完結しづらい→事前差し替え運用が前提。詳細は[[docs/decisions.md]]2026-07-09
 - 大圃場対応（ミッション分割、距離間隔撮影トリガー`multipleDistance`の実機検証）はPhase 4以降の課題
 
 ## 開発の歩み（進捗ログ）
