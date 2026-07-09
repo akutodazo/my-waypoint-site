@@ -15,9 +15,9 @@ export function DrawControl({ onPolygonDrawn }: Props) {
   const map = useMap(); // 親のMapContainerから地図本体を受け取る
 
   useEffect(() => {
-    const drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
-
+    // 描画ツールバーのみ。編集/削除ツールバー(edit)は使わない。
+    // 理由: ポリゴンは状態から<Polygon>で描くため、leaflet-drawの削除ボタンは
+    // 操作対象を持たず空振りする。削除は地図右上の自作ボタンで行う。
     const control = new L.Control.Draw({
       draw: {
         polygon: {},
@@ -28,7 +28,7 @@ export function DrawControl({ onPolygonDrawn }: Props) {
         marker: false,
         circlemarker: false,
       },
-      edit: { featureGroup: drawnItems },
+      edit: undefined,
     });
     map.addControl(control);
 
@@ -37,16 +37,14 @@ export function DrawControl({ onPolygonDrawn }: Props) {
       const coords = (layer.getLatLngs()[0] as L.LatLng[]).map(
         (ll) => [ll.lng, ll.lat] as [number, number],
       );
-      drawnItems.clearLayers(); // 図形は残さない（表示は状態から描く方式に統一）
-      onPolygonDrawn(coords);
+      onPolygonDrawn(coords); // 図形はmapに残さず、座標だけ状態へ渡す
     };
     map.on(L.Draw.Event.CREATED, onCreated);
 
-    // 後片付け（画面を離れるときにツールバーとレイヤーを外す）
+    // 後片付け（画面を離れるときにツールバーを外す）
     return () => {
       map.off(L.Draw.Event.CREATED, onCreated);
       map.removeControl(control);
-      map.removeLayer(drawnItems);
     };
   }, [map, onPolygonDrawn]);
 

@@ -2,29 +2,23 @@
 
 interface Props {
   waypointCount: number | null; // ルート未生成ならnull
-  hasPolygon: boolean;
   areaText: string | null; // 推定面積（polygon有時）
   flightText: string | null; // 推定飛行時間（route有時）
   error: string | null;
   warning: string | null;
   onGenerate: () => void;
   onDownload: () => void;
-  onClearRoute: () => void;
-  onClearPolygon: () => void;
 }
 
-/** 実行ボタン・生成結果・クリア操作・メッセージ表示 */
+/** 実行ボタン・生成結果・メッセージ表示（削除は地図右上のボタンで行う） */
 export function ActionPanel({
   waypointCount,
-  hasPolygon,
   areaText,
   flightText,
   error,
   warning,
   onGenerate,
   onDownload,
-  onClearRoute,
-  onClearPolygon,
 }: Props) {
   return (
     <section className="space-y-3">
@@ -51,35 +45,19 @@ export function ActionPanel({
       )}
 
       {waypointCount !== null && (
-        <div className="flex items-center justify-between rounded-xl bg-zinc-100 px-4 py-3">
-          <div>
-            <p className="text-sm font-medium text-zinc-600">
-              ウェイポイント数 ／ 推定飛行時間
-            </p>
-            <p className="text-lg font-bold">
-              {waypointCount} 点
-              {flightText && <span className="text-zinc-400"> ・ </span>}
-              {flightText}
-            </p>
-            <p className="text-xs text-zinc-400">
-              ※飛行時間は目安（加減速・旋回で前後します）
-            </p>
-          </div>
-          <button
-            onClick={onClearRoute}
-            className="shrink-0 text-sm font-bold text-zinc-600 underline underline-offset-4"
-          >
-            ルートを消す
-          </button>
+        <div className="rounded-xl bg-zinc-100 px-4 py-3">
+          <p className="text-sm font-medium text-zinc-600">
+            ウェイポイント数 ／ 推定飛行時間
+          </p>
+          <p className="text-lg font-bold">
+            {waypointCount} 点
+            {flightText && <span className="text-zinc-400"> ・ </span>}
+            {flightText}
+          </p>
+          <p className="text-xs text-zinc-400">
+            ※飛行時間は目安（加減速・旋回で前後します）
+          </p>
         </div>
-      )}
-      {hasPolygon && (
-        <button
-          onClick={onClearPolygon}
-          className="text-sm font-bold text-zinc-600 underline underline-offset-4"
-        >
-          圃場の選択を解除して描き直す
-        </button>
       )}
 
       {error && (

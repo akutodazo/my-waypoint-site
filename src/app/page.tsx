@@ -38,6 +38,8 @@ export default function Home() {
         polygon={planner.polygon}
         waypoints={planner.waypoints}
         onPolygonDrawn={planner.setPolygon}
+        onClearRoute={planner.clearRoute}
+        onClearPolygon={planner.clearPolygon}
       />
 
       <div className="mx-auto max-w-3xl space-y-10 px-5 py-8">
@@ -51,15 +53,12 @@ export default function Home() {
 
         <ActionPanel
           waypointCount={planner.waypoints?.length ?? null}
-          hasPolygon={planner.polygon !== null}
           areaText={planner.areaText}
           flightText={planner.flightText}
           error={planner.error}
           warning={planner.warning}
           onGenerate={planner.generate}
           onDownload={planner.download}
-          onClearRoute={planner.clearRoute}
-          onClearPolygon={planner.clearPolygon}
         />
 
         <FieldList
