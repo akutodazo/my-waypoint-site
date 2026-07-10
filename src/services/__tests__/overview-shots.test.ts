@@ -60,8 +60,25 @@ describe('generateOverviewShots', () => {
     expect(plan!.height).toBeLessThanOrEqual(149);
   });
 
-  test('500m四方: 3枚・高度149mでも収まらないのでnull', () => {
-    expect(generateOverviewShots(squarePolygon(500), params)).toBeNull();
+  test('500m四方: 3枚で収まらない場合は高度149m固定で必要枚数に自動分割', () => {
+    const plan = generateOverviewShots(squarePolygon(500), params);
+    expect(plan).not.toBeNull();
+    expect(plan!.height).toBe(149);
+    expect(plan!.waypoints.length).toBeGreaterThanOrEqual(4);
+    expect(plan!.shots).toBe(plan!.waypoints.length);
+  });
+
+  test('500m四方の分割撮影でも全点が圃場のbbox内に収まる', () => {
+    const polygon = squarePolygon(500);
+    const plan = generateOverviewShots(polygon, params);
+    const lngs = polygon.map((p) => p[0]);
+    const lats = polygon.map((p) => p[1]);
+    for (const w of plan!.waypoints) {
+      expect(w.lon).toBeGreaterThanOrEqual(Math.min(...lngs));
+      expect(w.lon).toBeLessThanOrEqual(Math.max(...lngs));
+      expect(w.lat).toBeGreaterThanOrEqual(Math.min(...lats));
+      expect(w.lat).toBeLessThanOrEqual(Math.max(...lats));
+    }
   });
 
   test('indexは0からの連番、speedは入力値が入る', () => {

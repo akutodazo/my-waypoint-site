@@ -64,17 +64,16 @@ export function useWaypointPlanner() {
     if (params.front === 0 && params.side === 0) {
       const plan = generateOverviewShots(polygon, params);
       if (!plan) {
-        setWaypoints(null);
-        setNotice(null);
-        setWarning(null);
-        setError(
-          '圃場が大きすぎて全体撮影できません（3枚・高度149mでも収まりません）。' +
-            'オーバーラップを設定してグリッド撮影にしてください',
-        );
+        // 3点未満の不正ポリゴンのみ（通常の描画では起きない）
+        setError('圃場の形を認識できませんでした。描き直してください');
         return;
       }
       setWaypoints(plan.waypoints);
-      setWarning(null);
+      setWarning(
+        plan.waypoints.length > WAYPOINT_LIMIT
+          ? `ウェイポイントが${plan.waypoints.length}点あり、DJI Flyの上限${WAYPOINT_LIMIT}点を超えています。圃場を分けて作成してください`
+          : null,
+      );
       setNotice(
         `全体撮影モード：${plan.shots}点で範囲全体を撮影します・飛行高度 約${plan.height}m` +
           '（自動計算のため高度入力は使いません）',

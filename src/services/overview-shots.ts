@@ -8,8 +8,8 @@ import { DEFAULT_CAMERA } from './route-generator';
 
 /** 航空法の150m未満制限を踏まえた自動計算高度の上限 */
 const MAX_HEIGHT_M = 149;
-/** 全体撮影モードの最大撮影枚数 */
-const MAX_SHOTS = 3;
+/** 高度を下げて少数枚で収める探索の上限枚数（超える場合は149m固定で必要枚数に分割） */
+const PREFERRED_MAX_SHOTS = 3;
 /** カバレッジ余裕（ヘディング誤差・GPSズレで端が切れるのを防ぐ） */
 const MARGIN = 1.05;
 const METERS_PER_DEG_LAT = 111320;
@@ -24,10 +24,11 @@ export interface OverviewPlan {
 
 /**
  * 全体撮影モード（オルソではなく圃場全体の色確認用）の撮影点を計算する。
- * 指定範囲のbboxが1〜3枚に収まる最小の高度を求め、各撮影帯の中心に点を置く。
+ * まず1〜3枚に収まる最小の高度を探し、収まらない大圃場は高度149m固定で
+ * 必要枚数（4枚、5枚…）のタイルに自動分割する（エラーにはしない）。
  * - DJIのウェイポイント飛行は最小2点のため、1枚で収まる場合も2点（2枚）にする
- * - 高度上限149m・3枚でも収まらない場合はnull（呼び出し側でエラー案内）
  * - カバレッジは撮影方向がbbox長辺に沿う前提の近似（MARGINで余裕を確保）
+ * - nullは不正ポリゴン（3点未満）のときのみ
  */
 export function generateOverviewShots(
   polygon: PolygonCoords,
@@ -57,7 +58,7 @@ export function generateOverviewShots(
   const shortSide = Math.min(widthM, heightM);
   const splitAlongLng = widthM >= heightM; // 長辺の向き＝分割方向
 
-  for (let n = 1; n <= MAX_SHOTS; n++) {
+  for (let n = 1; n <= PREFERRED_MAX_SHOTS; n++) {
     // 長辺をn分割した1帯が1枚に収まる高度
     const strip = longSide / n;
     const a = Math.max(strip, shortSide);
@@ -104,5 +105,37 @@ export function generateOverviewShots(
       })),
     };
   }
-  return null;
+
+  // 3枚で収まらない大圃場: 高度149m固定で必要枚数のタイルに分割（枚数上限なし）
+  const tileWide = (wide * MAX_HEIGHT_M) / MARGIN; // 1枚の実効カバー幅（余裕込み）
+  const tileNarrow = (narrow * MAX_HEIGHT_M) / MARGIN;
+  // footprintの長辺をbboxの長辺方向に合わせる
+  const cols = splitAlongLng
+    ? Math.ceil(widthM / tileWide)
+    : Math.ceil(widthM / tileNarrow);
+  const rows = splitAlongLng
+    ? Math.ceil(heightM / tileNarrow)
+    : Math.ceil(heightM / tileWide);
+
+  const centers: [number, number][] = [];
+  for (let r = 0; r < rows; r++) {
+    const lat = minLat + ((r + 0.5) / rows) * (maxLat - minLat);
+    const colIndexes = Array.from({ length: cols }, (_, c) => c);
+    if (r % 2 === 1) colIndexes.reverse(); // ジグザグ順で飛行距離を短くする
+    for (const c of colIndexes) {
+      centers.push([minLng + ((c + 0.5) / cols) * (maxLng - minLng), lat]);
+    }
+  }
+
+  return {
+    shots: centers.length,
+    height: MAX_HEIGHT_M,
+    waypoints: centers.map(([lon, lat], i) => ({
+      index: i,
+      lon,
+      lat,
+      height: MAX_HEIGHT_M,
+      speed: params.speed,
+    })),
+  };
 }
