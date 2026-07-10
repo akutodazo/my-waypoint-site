@@ -1,12 +1,13 @@
 import { FLIGHT_PRESETS, getPresetById } from '../presets';
 
 describe('FLIGHT_PRESETS', () => {
-  test('検証済みの3プリセットが定義されている', () => {
-    expect(FLIGHT_PRESETS).toHaveLength(3);
+  test('4プリセットが定義されている（検証済み3種＋全体撮影）', () => {
+    expect(FLIGHT_PRESETS).toHaveLength(4);
     expect(FLIGHT_PRESETS.map((p) => p.id)).toEqual([
       'overview-20',
       'detail-10',
       'oblique-10',
+      'overview-color',
     ]);
   });
 
@@ -22,6 +23,12 @@ describe('FLIGHT_PRESETS', () => {
     const oblique = getPresetById('oblique-10');
     expect(oblique?.height).toBe(10);
     expect(oblique?.gimbalPitch).toBe(-60);
+
+    // 全体撮影モードの発動条件（オーバーラップ0/0）を持つこと
+    const color = getPresetById('overview-color');
+    expect(color?.front).toBe(0);
+    expect(color?.side).toBe(0);
+    expect(color?.gimbalPitch).toBe(-90);
   });
 
   test('全プリセットが航空法の高度制限（150m未満）を満たす', () => {
@@ -31,13 +38,13 @@ describe('FLIGHT_PRESETS', () => {
     }
   });
 
-  test('全プリセットのジンバル角とオーバーラップ率が有効範囲内', () => {
+  test('全プリセットのジンバル角とオーバーラップ率が有効範囲内（0=全体撮影モードを許容）', () => {
     for (const p of FLIGHT_PRESETS) {
       expect(p.gimbalPitch).toBeGreaterThanOrEqual(-90);
       expect(p.gimbalPitch).toBeLessThanOrEqual(0);
-      expect(p.front).toBeGreaterThan(0);
+      expect(p.front).toBeGreaterThanOrEqual(0);
       expect(p.front).toBeLessThan(1);
-      expect(p.side).toBeGreaterThan(0);
+      expect(p.side).toBeGreaterThanOrEqual(0);
       expect(p.side).toBeLessThan(1);
     }
   });

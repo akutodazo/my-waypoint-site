@@ -65,6 +65,7 @@ export default function Home() {
           waypointCount={planner.waypoints?.length ?? null}
           areaText={planner.areaText}
           flightText={planner.flightText}
+          notice={planner.notice}
           error={planner.error}
           warning={planner.warning}
           onGenerate={planner.generate}

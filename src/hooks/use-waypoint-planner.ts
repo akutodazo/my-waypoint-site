@@ -9,6 +9,7 @@ import {
   formatDuration,
   polygonAreaSqm,
 } from '@/services/flight-metrics';
+import { generateOverviewShots } from '@/services/overview-shots';
 import { generateRoute } from '@/services/route-generator';
 import type {
   FlightParams,
@@ -33,6 +34,7 @@ export function useWaypointPlanner() {
   const [waypoints, setWaypoints] = useState<Waypoint[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null); // モード案内（infoトーン）
 
   const setPolygon = useCallback((p: PolygonCoords) => {
     setPolygonState(p);
@@ -57,6 +59,30 @@ export function useWaypointPlanner() {
       return;
     }
     setError(null);
+
+    // 前方・横オーバーラップがどちらも0 → 全体撮影モード（オルソではなく色確認用）
+    if (params.front === 0 && params.side === 0) {
+      const plan = generateOverviewShots(polygon, params);
+      if (!plan) {
+        setWaypoints(null);
+        setNotice(null);
+        setWarning(null);
+        setError(
+          '圃場が大きすぎて全体撮影できません（3枚・高度149mでも収まりません）。' +
+            'オーバーラップを設定してグリッド撮影にしてください',
+        );
+        return;
+      }
+      setWaypoints(plan.waypoints);
+      setWarning(null);
+      setNotice(
+        `全体撮影モード：${plan.shots}点で範囲全体を撮影します・飛行高度 約${plan.height}m` +
+          '（自動計算のため高度入力は使いません）',
+      );
+      return;
+    }
+
+    setNotice(null);
     const wps = generateRoute(polygon, params);
     setWaypoints(wps);
     setWarning(
@@ -70,6 +96,7 @@ export function useWaypointPlanner() {
   const clearRoute = () => {
     setWaypoints(null);
     setWarning(null);
+    setNotice(null);
   };
 
   const clearPolygon = () => {
@@ -77,6 +104,7 @@ export function useWaypointPlanner() {
     setWaypoints(null);
     setWarning(null);
     setError(null);
+    setNotice(null);
   };
 
   const download = async () => {
@@ -118,6 +146,7 @@ export function useWaypointPlanner() {
     clearRoute,
     error,
     warning,
+    notice,
     download,
     areaText,
     flightText,
