@@ -4,6 +4,7 @@ interface Props {
   waypointCount: number | null; // ルート未生成ならnull
   areaText: string | null; // 推定面積（polygon有時）
   flightText: string | null; // 推定飛行時間（route有時）
+  notice: string | null; // モード案内（全体撮影モード等）
   error: string | null;
   warning: string | null;
   onGenerate: () => void;
@@ -15,6 +16,7 @@ export function ActionPanel({
   waypointCount,
   areaText,
   flightText,
+  notice,
   error,
   warning,
   onGenerate,
@@ -63,6 +65,11 @@ export function ActionPanel({
         </div>
       )}
 
+      {notice && (
+        <p className="rounded-xl bg-green-50 px-4 py-3 text-base font-bold text-green-900">
+          {notice}
+        </p>
+      )}
       {error && (
         <p className="rounded-xl bg-red-50 px-4 py-3 text-base font-bold text-red-800">
           {error}

@@ -35,6 +35,17 @@ export const FLIGHT_PRESETS: FlightPreset[] = [
     side: 0.7,
     speed: 5,
   },
+  {
+    id: 'overview-color',
+    label: '全体撮影（色確認）',
+    description:
+      '小麦等の色ムラ確認用。範囲全体を2〜3枚で撮影（高度は自動計算）',
+    height: 100, // 全体撮影モードでは自動計算されるためこの値は使われない
+    gimbalPitch: -90,
+    front: 0,
+    side: 0,
+    speed: 5,
+  },
 ];
 
 export function getPresetById(id: string): FlightPreset | undefined {
