@@ -64,3 +64,15 @@
 - 背景: 小麦圃場はオルソ用の細部撮影ではなく全体の色ムラ確認が目的。少数枚で圃場全体を写したい
 - 決定: 前方・横オーバーラップがどちらも0のとき、グリッド生成ではなく高度自動計算の全体撮影に切り替える（1〜3枚で収まらない大圃場は高度149m固定で必要枚数にジグザグ分割、エラーにしない）。専用プリセット「全体撮影（色確認）」も追加
 - 理由: 既存UIに新しい入力を足さず「オーバーラップ不要＝オルソ不要」という意味的に自然な条件で分岐できる。Waypointが点ごとにheightを持つ既存設計のためkmz-builder無変更で実現。DJI最小2点制約により1枚撮影は不可（2点=2枚を最小構成とする）
+
+## 2026-07-18 ドメイン定数はflight-constants.tsに集約
+
+- 背景: 技術負債調査で、度→m換算111320が2ファイルに重複、DJI上限200点・高度上限149m等が3ファイルに散在と判明
+- 決定: 機体・法規・地理の定数（WAYPOINT_LIMIT / MAX_FLIGHT_HEIGHT_M / METERS_PER_DEG_LAT / DEFAULT_CAMERA / DEFAULT_FLIGHT_PARAMS）をservices/flight-constants.tsへ集約
+- 理由: 機体変更（Lito X1導入等）・法改正時の修正点を1箇所に閉じる。片方だけ直して座標がずれる事故の予防
+
+## 2026-07-18 UI層のフック直呼びをprops配線に統一
+
+- 背景: search-boxがusePlaceSearchを、preset-barがFLIGHT_PRESETSを直接importし「UI部品はpropsで受け取るだけ」の掟に違反していた
+- 決定: usePlaceSearchはpage側で呼びPlaceSearch型（types/domain）のpropsで渡す。プリセット一覧もpageから配線
+- 理由: UIを見た目だけの部品に保つとテスト・差し替えが容易なまま。掟の違反を放置すると後続コードが真似て雪だるまになる
