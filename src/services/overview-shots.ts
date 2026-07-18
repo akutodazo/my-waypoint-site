@@ -4,15 +4,16 @@ import type {
   PolygonCoords,
   Waypoint,
 } from '@/types/domain';
-import { DEFAULT_CAMERA } from './route-generator';
+import {
+  DEFAULT_CAMERA,
+  MAX_FLIGHT_HEIGHT_M,
+  METERS_PER_DEG_LAT,
+} from './flight-constants';
 
-/** 航空法の150m未満制限を踏まえた自動計算高度の上限 */
-const MAX_HEIGHT_M = 149;
-/** 高度を下げて少数枚で収める探索の上限枚数（超える場合は149m固定で必要枚数に分割） */
+/** 高度を下げて少数枚で収める探索の上限枚数（超える場合は最大高度固定で必要枚数に分割） */
 const PREFERRED_MAX_SHOTS = 3;
 /** カバレッジ余裕（ヘディング誤差・GPSズレで端が切れるのを防ぐ） */
 const MARGIN = 1.05;
-const METERS_PER_DEG_LAT = 111320;
 
 export interface OverviewPlan {
   waypoints: Waypoint[];
@@ -64,7 +65,7 @@ export function generateOverviewShots(
     const a = Math.max(strip, shortSide);
     const b = Math.min(strip, shortSide);
     const required = MARGIN * Math.max(a / wide, b / narrow);
-    if (required > MAX_HEIGHT_M) continue;
+    if (required > MAX_FLIGHT_HEIGHT_M) continue;
     const flightHeight = Math.ceil(required);
 
     // 各帯の中心座標
@@ -107,8 +108,8 @@ export function generateOverviewShots(
   }
 
   // 3枚で収まらない大圃場: 高度149m固定で必要枚数のタイルに分割（枚数上限なし）
-  const tileWide = (wide * MAX_HEIGHT_M) / MARGIN; // 1枚の実効カバー幅（余裕込み）
-  const tileNarrow = (narrow * MAX_HEIGHT_M) / MARGIN;
+  const tileWide = (wide * MAX_FLIGHT_HEIGHT_M) / MARGIN; // 1枚の実効カバー幅（余裕込み）
+  const tileNarrow = (narrow * MAX_FLIGHT_HEIGHT_M) / MARGIN;
   // footprintの長辺をbboxの長辺方向に合わせる
   const cols = splitAlongLng
     ? Math.ceil(widthM / tileWide)
@@ -129,12 +130,12 @@ export function generateOverviewShots(
 
   return {
     shots: centers.length,
-    height: MAX_HEIGHT_M,
+    height: MAX_FLIGHT_HEIGHT_M,
     waypoints: centers.map(([lon, lat], i) => ({
       index: i,
       lon,
       lat,
-      height: MAX_HEIGHT_M,
+      height: MAX_FLIGHT_HEIGHT_M,
       speed: params.speed,
     })),
   };

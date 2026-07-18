@@ -1,8 +1,5 @@
-import {
-  computeSpacing,
-  generateRoute,
-  DEFAULT_CAMERA,
-} from '../route-generator';
+import { computeSpacing, generateRoute } from '../route-generator';
+import { DEFAULT_CAMERA } from '../flight-constants';
 import type { FlightParams, PolygonCoords } from '@/types/domain';
 
 const params: FlightParams = {
