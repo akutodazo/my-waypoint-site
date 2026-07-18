@@ -11,6 +11,10 @@ import {
 } from '@/services/flight-metrics';
 import { generateOverviewShots } from '@/services/overview-shots';
 import { generateRoute } from '@/services/route-generator';
+import {
+  DEFAULT_FLIGHT_PARAMS,
+  WAYPOINT_LIMIT,
+} from '@/services/flight-constants';
 import type {
   FlightParams,
   FlightPreset,
@@ -18,18 +22,9 @@ import type {
   Waypoint,
 } from '@/types/domain';
 
-// DJI Fly（Air 3S / Lito X1）のウェイポイント飛行の上限
-const WAYPOINT_LIMIT = 200;
-
 /** 経路の生成とKMZダウンロードを担当するPresenter（「飛ばす」係） */
 export function useWaypointPlanner() {
-  const [params, setParams] = useState<FlightParams>({
-    height: 50,
-    speed: 5,
-    front: 0.8,
-    side: 0.7,
-    gimbalPitch: -90,
-  });
+  const [params, setParams] = useState<FlightParams>(DEFAULT_FLIGHT_PARAMS);
   const [polygon, setPolygonState] = useState<PolygonCoords | null>(null);
   const [waypoints, setWaypoints] = useState<Waypoint[] | null>(null);
   const [error, setError] = useState<string | null>(null);

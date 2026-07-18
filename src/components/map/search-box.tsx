@@ -1,16 +1,15 @@
 'use client';
 
-import { usePlaceSearch } from '@/hooks/use-place-search';
-import type { PlaceResult } from '@/types/domain';
+import type { PlaceResult, PlaceSearch } from '@/types/domain';
 
 interface Props {
+  /** 検索の状態と操作（usePlaceSearchをpage側で呼び、propsで受け取る） */
+  search: PlaceSearch;
   onSelect: (place: PlaceResult) => void;
 }
 
 /** 地図左上に重ねる場所検索ボックス（地理院API） */
-export function SearchBox({ onSelect }: Props) {
-  const search = usePlaceSearch();
-
+export function SearchBox({ search, onSelect }: Props) {
   return (
     <div className="absolute left-14 right-3 top-3 z-[1000] sm:right-auto sm:w-72">
       <form

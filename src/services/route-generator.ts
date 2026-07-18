@@ -5,16 +5,7 @@ import type {
   PolygonCoords,
   Waypoint,
 } from '@/types/domain';
-
-/**
- * 35mm判換算24mm・4:3センサーの機体（DJI Air 3S広角 / Lito X1）。
- * 換算値で統一: 幅34.6×高さ26.0（対角43.3=フルサイズ対角）・焦点24mm相当
- */
-export const DEFAULT_CAMERA: CameraSpec = {
-  sensorWidth: 34.6,
-  sensorHeight: 26.0,
-  focalLength: 24,
-};
+import { DEFAULT_CAMERA, METERS_PER_DEG_LAT } from './flight-constants';
 
 export function computeSpacing(params: FlightParams, camera: CameraSpec) {
   const wg = (camera.sensorWidth / camera.focalLength) * params.height;
@@ -45,8 +36,8 @@ export function generateRoute(
   // ② 回転後の外接矩形 [minX, minY, maxX, maxY]
   const [minX, minY, maxX, maxY] = turf.bbox(rotated);
 
-  // 緯度方向の間隔(m)を「度」に換算（緯度1度≒111320m）
-  const stepDeg = lineSpacing / 111320;
+  // 緯度方向の間隔(m)を「度」に換算
+  const stepDeg = lineSpacing / METERS_PER_DEG_LAT;
 
   const lines: [number, number][][] = [];
   let flip = false;

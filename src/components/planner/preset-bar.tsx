@@ -1,17 +1,18 @@
 'use client';
 
-import { FLIGHT_PRESETS } from '@/services/presets';
 import type { FlightPreset } from '@/types/domain';
 
 interface Props {
+  /** 表示するプリセット一覧（page側でFLIGHT_PRESETSを配線する） */
+  presets: FlightPreset[];
   onApply: (preset: FlightPreset) => void;
 }
 
 /** 検証済み撮影プリセットの選択帯 */
-export function PresetBar({ onApply }: Props) {
+export function PresetBar({ presets, onApply }: Props) {
   return (
     <div className="flex gap-2.5 overflow-x-auto pb-1">
-      {FLIGHT_PRESETS.map((preset) => (
+      {presets.map((preset) => (
         <button
           key={preset.id}
           onClick={() => onApply(preset)}

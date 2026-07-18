@@ -42,6 +42,20 @@ export interface PlaceResult {
   lng: number;
 }
 
+/**
+ * 場所検索の状態と操作。usePlaceSearch（Presenter）が提供し、
+ * SearchBox（UI）はこれをpropsで受け取るだけにする（依存の掟）
+ */
+export interface PlaceSearch {
+  query: string;
+  setQuery: (query: string) => void;
+  results: PlaceResult[];
+  loading: boolean;
+  error: string | null;
+  run: () => Promise<void>;
+  clear: () => void;
+}
+
 /** 検証済みの撮影パラメータのセット */
 export interface FlightPreset {
   id: string;

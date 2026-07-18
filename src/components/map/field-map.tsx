@@ -14,11 +14,17 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import { DrawControl } from './draw-control';
 import { SearchBox } from './search-box';
-import type { PlaceResult, PolygonCoords, Waypoint } from '@/types/domain';
+import type {
+  PlaceResult,
+  PlaceSearch,
+  PolygonCoords,
+  Waypoint,
+} from '@/types/domain';
 
 interface Props {
   polygon: PolygonCoords | null;
   waypoints: Waypoint[] | null;
+  placeSearch: PlaceSearch;
   onPolygonDrawn: (polygon: PolygonCoords) => void;
   onClearRoute: () => void;
   onClearPolygon: () => void;
@@ -121,6 +127,7 @@ function FlyTo({ target }: { target: PlaceResult | null }) {
 export function FieldMap({
   polygon,
   waypoints,
+  placeSearch,
   onPolygonDrawn,
   onClearRoute,
   onClearPolygon,
@@ -134,7 +141,7 @@ export function FieldMap({
   return (
     <div className="relative">
       {/* 左上コーナーの右: 検索ボックス */}
-      <SearchBox onSelect={setFlyTarget} />
+      <SearchBox search={placeSearch} onSelect={setFlyTarget} />
       {/* 右上: 削除ボタン */}
       <DeleteControls
         hasPolygon={polygon !== null}

@@ -8,6 +8,8 @@ import { ParamForm } from '@/components/planner/param-form';
 import { PresetBar } from '@/components/planner/preset-bar';
 import { useWaypointPlanner } from '@/hooks/use-waypoint-planner';
 import { useFields } from '@/hooks/use-fields';
+import { usePlaceSearch } from '@/hooks/use-place-search';
+import { FLIGHT_PRESETS } from '@/services/presets';
 
 // Leafletはブラウザでしか動かないため、サーバー描画を無効化して読み込む
 const FieldMap = dynamic(
@@ -21,6 +23,7 @@ const FieldMap = dynamic(
 export default function Home() {
   const planner = useWaypointPlanner();
   const fieldStore = useFields(planner.polygon);
+  const placeSearch = usePlaceSearch();
 
   return (
     <main className="min-h-screen bg-zinc-50 text-zinc-900">
@@ -49,6 +52,7 @@ export default function Home() {
       <FieldMap
         polygon={planner.polygon}
         waypoints={planner.waypoints}
+        placeSearch={placeSearch}
         onPolygonDrawn={planner.setPolygon}
         onClearRoute={planner.clearRoute}
         onClearPolygon={planner.clearPolygon}
@@ -57,7 +61,7 @@ export default function Home() {
       <div className="mx-auto max-w-3xl space-y-6 px-5 py-6">
         <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold text-zinc-900">撮影設定</h2>
-          <PresetBar onApply={planner.applyPreset} />
+          <PresetBar presets={FLIGHT_PRESETS} onApply={planner.applyPreset} />
           <ParamForm params={planner.params} onChange={planner.updateParam} />
         </section>
 

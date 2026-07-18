@@ -36,7 +36,7 @@
 ## 技術構成
 
 Next.js (App Router) / TypeScript / Tailwind CSS / Leaflet + leaflet-draw /
-Turf.js / JSZip / Jest (38 tests) / GitHub Actions (CI + Pages自動デプロイ)
+Turf.js / JSZip / Jest / GitHub Actions (CI + Pages自動デプロイ)
 
 ```mermaid
 graph TD
@@ -52,7 +52,7 @@ graph TD
 | 判断                                         | 理由                                                                                          |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | 4層構造（UI/Presenter/Service/Repository）   | 変更箇所を1か所に閉じ込めるため。UI全面改修でもロジックとテストが無傷だった実績               |
-| 経路計算・KMZ生成を純粋関数に                | 「座標in→座標out」で機械採点できる。テスト38本の大半がここ                                    |
+| 経路計算・KMZ生成を純粋関数に                | 「座標in→座標out」で機械採点できる。テストの大半がここ                                        |
 | テストの正解データに本物のDJI Fly製KMZを使用 | 「DJIが読める形式か」を仕様書ではなく実物で保証するため                                       |
 | 圃場保存はlocalStorage（interfaceで抽象化）  | 現段階はサーバー不要・費用ゼロ。共有機能導入時はimplementations追加だけでDB移行できる契約設計 |
 | 静的書き出し + GitHub Pages                  | サーバーレスで運用費ゼロ。個人開発の持続性を優先                                              |
@@ -63,7 +63,7 @@ graph TD
 
 ```bash
 npm run dev      # 開発サーバー
-npm test         # テスト（38本）
+npm test         # テスト
 npm run lint     # ESLint
 npm run format   # Prettier整形
 npm run build    # 本番ビルド（型チェック込み）

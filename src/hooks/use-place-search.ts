@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { searchPlaces } from '@/services/geocoding';
-import type { PlaceResult } from '@/types/domain';
+import type { PlaceResult, PlaceSearch } from '@/types/domain';
 
 /** 場所検索を担当するPresenter */
-export function usePlaceSearch() {
+export function usePlaceSearch(): PlaceSearch {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PlaceResult[]>([]);
   const [loading, setLoading] = useState(false);
