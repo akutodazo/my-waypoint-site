@@ -5,6 +5,7 @@
 このファイルは、このリポジトリでClaude Code（および開発者自身）が作業する際のガイダンスです。
 **汎用の設計規約は [ARCHITECTURE.md](ARCHITECTURE.md) を参照。ここにはこのプロジェクト固有の知識だけを書く。**
 **機能追加・修正の手順と報告形式は [docs/tech-debt-guard.md](docs/tech-debt-guard.md)（技術負債ガード）に従う。外部AIへ依頼するときは同文書を添付する。**
+**既知の負債と修正履歴は [docs/tech-debt-log.md](docs/tech-debt-log.md)（技術負債カルテ）。負債を修正したら同じPRで症例を追記する。**
 
 ## プロジェクト概要
 
